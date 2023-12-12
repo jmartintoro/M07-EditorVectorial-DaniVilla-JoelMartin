@@ -12,6 +12,8 @@ class AppData with ChangeNotifier {
   Shape newShape = Shape();
   List<Shape> shapesList = [];
 
+  List<Shape> deletedShapesList = [];
+
   bool readyExample = false;
   late dynamic dataExample;
 
@@ -80,5 +82,17 @@ class AppData with ChangeNotifier {
       newShape = Shape();
       notifyListeners();
     }
+  }
+
+  void undo(){
+    deletedShapesList.add(shapesList.last);
+    shapesList.removeLast();
+    notifyListeners();
+  }
+
+  void redo(){
+    shapesList.add(deletedShapesList.last);
+    deletedShapesList.removeLast();
+    notifyListeners();
   }
 }
