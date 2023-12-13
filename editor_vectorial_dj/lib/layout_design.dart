@@ -21,8 +21,6 @@ class LayoutDesignState extends State<LayoutDesign> {
   Offset _scrollCenter = const Offset(0, 0);
   bool _isMouseButtonPressed = false;
   bool _isAltOptionKeyPressed = false;
-  bool _isCtrlKeyPressed = false;
-  bool _isShiftKeyPressed = false;
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -110,33 +108,9 @@ class LayoutDesignState extends State<LayoutDesign> {
                   if (event.logicalKey == LogicalKeyboardKey.altLeft) {
                     _isAltOptionKeyPressed = true;
                   }
-                  if (event.logicalKey == LogicalKeyboardKey.controlLeft || event.logicalKey == LogicalKeyboardKey.metaLeft) {
-                    _isCtrlKeyPressed = true;
-                  }
-                  if (event.logicalKey == LogicalKeyboardKey.shiftLeft) {
-                    _isShiftKeyPressed = true;
-                  }
-                  if (event.logicalKey == LogicalKeyboardKey.keyZ && _isCtrlKeyPressed && !_isShiftKeyPressed) {
-                    if (appData.shapesList.isNotEmpty){
-                      appData.undo();
-                      print("CTRL + Z");
-                    }
-                  }
-                  if (event.logicalKey == LogicalKeyboardKey.keyZ && _isCtrlKeyPressed && _isShiftKeyPressed) {
-                    if (appData.deletedShapesList.isNotEmpty){
-                      appData.redo();
-                      print("CTRL + SHIFT + Z");
-                    }
-                  }
                 } else if (event is RawKeyUpEvent) {
                   if (event.logicalKey == LogicalKeyboardKey.altLeft) {
                     _isAltOptionKeyPressed = false;
-                  }
-                  if (event.logicalKey == LogicalKeyboardKey.shiftLeft) {
-                    _isShiftKeyPressed = false;
-                  }
-                  if (event.logicalKey == LogicalKeyboardKey.controlLeft  || event.logicalKey == LogicalKeyboardKey.metaLeft) {
-                    _isCtrlKeyPressed = false;
                   }
                 }
               },
@@ -219,7 +193,6 @@ class LayoutDesignState extends State<LayoutDesign> {
                             _isMouseButtonPressed = false;
                             if (appData.toolSelected == "shape_drawing") {
                               appData.addNewShapeToShapesList();
-                              appData.deletedShapesList.clear();
                             }
                             setState(() {});
                           },

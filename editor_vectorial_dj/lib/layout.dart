@@ -65,7 +65,7 @@ class _LayoutState extends State<Layout> {
           sidebarLeft: Container(),
           sidebarRight: const LayoutSidebarRight(),
           sidebarRightWidth: 275,
-          central: const LayoutDesign(),
+          central: LayoutDesign(),
         ));
   }
 }

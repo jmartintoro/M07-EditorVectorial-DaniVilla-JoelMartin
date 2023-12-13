@@ -188,9 +188,9 @@ class LayoutDesignPainter extends CustomPainter {
     if (appData.shapesList.isNotEmpty) {
       for (int i = 0; i < appData.shapesList.length; i++) {
         Paint paint = Paint();
-        paint.color = CDKTheme.black;
+        paint.color = appData.shapesColor[i];
         paint.style = PaintingStyle.stroke;
-        paint.strokeWidth = 1;
+        paint.strokeWidth = appData.shapesWeight[i];
         Shape shape = appData.shapesList[i];
         double x = shape.position.dx + shape.points[0].dx;
         double y = shape.position.dy + shape.points[0].dy;
@@ -208,9 +208,9 @@ class LayoutDesignPainter extends CustomPainter {
     // Dibuixa el poligon que s'està afegint (relatiu a la seva posició)
     if (appData.newShape.points.isNotEmpty) {
       Paint paint = Paint();
-      paint.color = CDKTheme.black;
+      paint.color = appData.strokeColor;
       paint.style = PaintingStyle.stroke;
-      paint.strokeWidth = 1;
+      paint.strokeWidth = appData.strokeWeight;
       Shape shape = appData.newShape;
       double x = shape.position.dx + appData.newShape.points[0].dx;
       double y = shape.position.dy + appData.newShape.points[0].dy;
@@ -222,6 +222,17 @@ class LayoutDesignPainter extends CustomPainter {
         path.lineTo(x, y);
       }
       canvas.drawPath(path, paint);
+    }
+
+    //Recuadro al rededor de Shape
+    if (appData.paintRecuadre && appData.recuadrePositions.length == 4) {
+      paintRecuadre(
+          canvas,
+          appData.recuadrePositions[0],
+          appData.recuadrePositions[1],
+          appData.recuadrePositions[2],
+          appData.recuadrePositions[3],
+          CDKTheme.yellow);
     }
 
     // Restaura l'estat previ a l'escalat i translació
@@ -240,5 +251,20 @@ class LayoutDesignPainter extends CustomPainter {
         oldDelegate.theme != theme ||
         oldDelegate.centerX != centerX ||
         oldDelegate.centerY != centerY;
+  }
+
+  void paintRecuadre(Canvas canvas, double x1, double x2, double y1, double y2,
+      Color colorIndex) {
+    Paint paint = new Paint();
+    paint.color = colorIndex;
+    paint.style = PaintingStyle.stroke;
+    paint.strokeWidth = 2;
+    Path path = Path();
+    path.moveTo(x1, y1);
+    path.lineTo(x2, y1);
+    path.lineTo(x2, y2);
+    path.lineTo(x1, y2);
+    path.lineTo(x1, y1);
+    canvas.drawPath(path, paint);
   }
 }

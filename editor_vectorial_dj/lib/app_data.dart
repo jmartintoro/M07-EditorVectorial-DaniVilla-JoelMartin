@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cupertino_desktop_kit/cdk.dart';
 import 'util_shape.dart';
 
 class AppData with ChangeNotifier {
@@ -10,9 +11,14 @@ class AppData with ChangeNotifier {
   Size docSize = const Size(500, 400);
   String toolSelected = "shape_drawing";
   Shape newShape = Shape();
+  Color strokeColor = CDKTheme.green;
+  double strokeWeight = 1;
   List<Shape> shapesList = [];
-
-  List<Shape> deletedShapesList = [];
+  List<Color> shapesColor = [];
+  List<double> shapesWeight = [];
+  List<Offset> shapesInitialPosition = [];
+  bool paintRecuadre = false;
+  List<double> recuadrePositions = []; //[x1,x2,y1,y2]
 
   bool readyExample = false;
   late dynamic dataExample;
@@ -67,6 +73,7 @@ class AppData with ChangeNotifier {
     newShape = Shape();
     newShape.setPosition(position);
     newShape.addPoint(Offset(0, 0));
+    shapesInitialPosition.add(newShape.position);
     notifyListeners();
   }
 
@@ -79,20 +86,45 @@ class AppData with ChangeNotifier {
     // Si no hi ha almenys 2 punts, no es podrà dibuixar res
     if (newShape.points.length >= 2) {
       shapesList.add(newShape);
+      shapesColor.add(strokeColor);
+      shapesWeight.add(strokeWeight);
       newShape = Shape();
       notifyListeners();
     }
   }
 
-  void undo(){
-    deletedShapesList.add(shapesList.last);
-    shapesList.removeLast();
-    notifyListeners();
-  }
+  void getRecuadreForm(int shapeIndex) {
+    double initialX = shapesInitialPosition[shapeIndex].dx;
+    double initialY = shapesInitialPosition[shapeIndex].dy;
 
-  void redo(){
-    shapesList.add(deletedShapesList.last);
-    deletedShapesList.removeLast();
+    double strokeWidth = shapesWeight[shapeIndex];
+
+    double x1 =
+        shapesList[shapeIndex].points[0].dx + initialX - strokeWidth / 2; //x més baixa
+    double x2 = 0; //x més alta
+    double y1 =
+        shapesList[shapeIndex].points[0].dy + initialY - strokeWidth / 2; //y més baixa
+    double y2 = 0; //y més alta
+
+    for (Offset of in shapesList[shapeIndex].points) {
+      if (of.dx + initialX - strokeWidth / 2 < x1) {
+        x1 = of.dx + initialX - strokeWidth / 2;
+      } else if (of.dx + initialX + strokeWidth / 2 > x2) {
+        x2 = of.dx + initialX + strokeWidth / 2;
+      }
+
+      if (of.dy + initialY - strokeWidth / 2 < y1) {
+        y1 = of.dy + initialY - strokeWidth / 2;
+      } else if (of.dy + initialY + strokeWidth / 2 > y2) {
+        y2 = of.dy + initialY + strokeWidth / 2;
+      }
+    }
+
+    recuadrePositions.clear();
+    recuadrePositions.add(x1);
+    recuadrePositions.add(x2);
+    recuadrePositions.add(y1);
+    recuadrePositions.add(y2);
     notifyListeners();
   }
 }
