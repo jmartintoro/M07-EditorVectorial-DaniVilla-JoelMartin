@@ -30,7 +30,7 @@ class _LayoutSidebarRightState extends State<LayoutSidebarRight> {
   late Widget _preloadedColorPicker;
   final GlobalKey<CDKDialogPopoverState> _anchorColorButton = GlobalKey();
   final ValueNotifier<Color> _valueColorNotifier =
-      ValueNotifier(CDKTheme.green);
+      ValueNotifier(CDKTheme.black);
 
   @override
   void initState() {
@@ -147,9 +147,9 @@ class _LayoutSidebarRightState extends State<LayoutSidebarRight> {
                                   return GestureDetector(
                                     child: Container(
                                         padding: EdgeInsets.all(8),
-                                        child: Text('Shape $index     ${appData.shapesWeight[index]}px')),
+                                        child: Text('Shape $index     ${appData.shapesList[index].strokeWeight}px')),
                                     onTap: () {
-                                      appData.getRecuadreForm(index);
+                                      appData.getRecuadreForm(index, appData.shapesList[index]);
                                       appData.paintRecuadre = true;
                                     },
                                   );

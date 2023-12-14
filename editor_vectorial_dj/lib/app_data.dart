@@ -11,12 +11,9 @@ class AppData with ChangeNotifier {
   Size docSize = const Size(500, 400);
   String toolSelected = "shape_drawing";
   Shape newShape = Shape();
-  Color strokeColor = CDKTheme.green;
+  Color strokeColor = CDKTheme.black;
   double strokeWeight = 1;
   List<Shape> shapesList = [];
-  List<Color> shapesColor = [];
-  List<double> shapesWeight = [];
-  List<Offset> shapesInitialPosition = [];
   bool paintRecuadre = false;
   List<double> recuadrePositions = []; //[x1,x2,y1,y2]
 
@@ -73,7 +70,7 @@ class AppData with ChangeNotifier {
     newShape = Shape();
     newShape.setPosition(position);
     newShape.addPoint(Offset(0, 0));
-    shapesInitialPosition.add(newShape.position);
+    newShape.setInitialPosition(newShape.position);
     notifyListeners();
   }
 
@@ -85,19 +82,19 @@ class AppData with ChangeNotifier {
   void addNewShapeToShapesList() {
     // Si no hi ha almenys 2 punts, no es podrà dibuixar res
     if (newShape.points.length >= 2) {
+      newShape.setStrokeColor(strokeColor);
+      newShape.setStrokeWeight(strokeWeight);
       shapesList.add(newShape);
-      shapesColor.add(strokeColor);
-      shapesWeight.add(strokeWeight);
       newShape = Shape();
       notifyListeners();
     }
   }
 
-  void getRecuadreForm(int shapeIndex) {
-    double initialX = shapesInitialPosition[shapeIndex].dx;
-    double initialY = shapesInitialPosition[shapeIndex].dy;
+  void getRecuadreForm(int shapeIndex, Shape shape) {
+    double initialX = shape.initialPosition.dx;
+    double initialY = shape.initialPosition.dy;
 
-    double strokeWidth = shapesWeight[shapeIndex];
+    double strokeWidth = shape.strokeWeight;
 
     double x1 =
         shapesList[shapeIndex].points[0].dx + initialX - strokeWidth / 2; //x més baixa

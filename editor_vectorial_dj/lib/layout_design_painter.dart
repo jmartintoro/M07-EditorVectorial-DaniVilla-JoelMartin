@@ -188,9 +188,9 @@ class LayoutDesignPainter extends CustomPainter {
     if (appData.shapesList.isNotEmpty) {
       for (int i = 0; i < appData.shapesList.length; i++) {
         Paint paint = Paint();
-        paint.color = appData.shapesColor[i];
+        paint.color = appData.shapesList[i].strokeColor;
         paint.style = PaintingStyle.stroke;
-        paint.strokeWidth = appData.shapesWeight[i];
+        paint.strokeWidth = appData.shapesList[i].strokeWeight;
         Shape shape = appData.shapesList[i];
         double x = shape.position.dx + shape.points[0].dx;
         double y = shape.position.dy + shape.points[0].dy;
