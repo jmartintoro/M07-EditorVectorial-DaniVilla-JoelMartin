@@ -3,7 +3,7 @@ import 'cdk_theme_notifier.dart';
 import 'cdk_theme.dart';
 import 'cdk_picker_check_list.dart';
 import 'cdk_dialogs_manager.dart';
-import 'cdk_dialog_popover.dart';
+import 'cdk_dialog_popover2.dart';
 
 // Copyright © 2023 Albert Palacios. All Rights Reserved.
 // Licensed under the BSD 3-clause license, see LICENSE file for details.

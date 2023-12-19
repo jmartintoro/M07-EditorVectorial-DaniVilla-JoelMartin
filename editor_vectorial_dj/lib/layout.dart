@@ -1,9 +1,9 @@
-import 'package:editor_vectorial_dj/app_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk.dart';
 import 'package:provider/provider.dart';
+import 'app_data.dart';
 import 'layout_design.dart';
-import 'layout_sidebar_right.dart';
+import 'layout_sidebar.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -63,9 +63,9 @@ class _LayoutState extends State<Layout> {
           sidebarLeftDefaultsVisible: false,
           sidebarRightDefaultsVisible: true,
           sidebarLeft: Container(),
-          sidebarRight: const LayoutSidebarRight(),
+          sidebarRight: const LayoutSidebar(),
           sidebarRightWidth: 275,
-          central: LayoutDesign(),
+          central: const LayoutDesign(),
         ));
   }
 }

@@ -11,7 +11,7 @@ export 'cdk_button_select.dart';
 export 'cdk_button_sidebar.dart';
 export 'cdk_button_switch.dart';
 export 'cdk_buttons_up_down.dart';
-export 'cdk_dialog_popover.dart';
+export 'cdk_dialog_popover2.dart';
 export 'cdk_dialog_popover_arrowed.dart';
 export 'cdk_dialog_draggable.dart';
 export 'cdk_dialog_modal.dart';

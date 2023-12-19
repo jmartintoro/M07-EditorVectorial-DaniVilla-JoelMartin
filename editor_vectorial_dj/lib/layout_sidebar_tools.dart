@@ -26,16 +26,16 @@ class LayoutSidebarTools extends StatelessWidget {
                 : CDKTheme.grey;
 
         return Container(
-          padding: const EdgeInsets.only(top: 2, left: 2),
+          padding: const EdgeInsets.only(top: 2, left: 2, right: 2),
           child: UtilButtonIcon(
-              size: 24,
+              size: 28,
               isSelected: appData.toolSelected == tool,
               onPressed: () {
                 appData.setToolSelected(tool);
               },
               child: SizedBox(
-                  height: 20,
-                  width: 20,
+                  height: 24,
+                  width: 24,
                   child: SvgPicture.asset('assets/images/$tool.svg',
                       colorFilter:
                           ColorFilter.mode(iconColor, BlendMode.srcIn)))),

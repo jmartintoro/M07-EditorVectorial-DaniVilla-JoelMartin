@@ -11,7 +11,7 @@ import 'cdk_theme.dart';
 enum CDKDialogPopoverType { down, center, side }
 // TODO 'side' type
 
-class CDKDialogPopover extends StatefulWidget {
+class CDKDialogPopover2 extends StatefulWidget {
   final GlobalKey anchorKey;
   final CDKDialogPopoverType type;
   final bool isAnimated;
@@ -19,7 +19,7 @@ class CDKDialogPopover extends StatefulWidget {
   final Function? onHide;
   final Widget child;
 
-  const CDKDialogPopover({
+  const CDKDialogPopover2({
     Key? key,
     required this.anchorKey,
     this.type = CDKDialogPopoverType.center,
@@ -33,7 +33,7 @@ class CDKDialogPopover extends StatefulWidget {
   CDKDialogPopoverState createState() => CDKDialogPopoverState();
 }
 
-class CDKDialogPopoverState extends State<CDKDialogPopover>
+class CDKDialogPopoverState extends State<CDKDialogPopover2>
     with SingleTickerProviderStateMixin {
   OverlayEntry? overlayEntry;
   final int _animationMillis = 200;

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'cdk_dialog_draggable.dart';
 import 'cdk_dialog_modal.dart';
-import 'cdk_dialog_popover.dart';
+import 'cdk_dialog_popover2.dart';
 import 'cdk_dialog_popover_arrowed.dart';
 
 // Copyright © 2023 Albert Palacios. All Rights Reserved.
@@ -31,7 +31,7 @@ class CDKDialogsManager {
 
     OverlayEntry? overlayEntry;
     overlayEntry = OverlayEntry(
-      builder: (BuildContext context) => CDKDialogPopover(
+      builder: (BuildContext context) => CDKDialogPopover2(
         key: key,
         isAnimated: isAnimated,
         type: type,
