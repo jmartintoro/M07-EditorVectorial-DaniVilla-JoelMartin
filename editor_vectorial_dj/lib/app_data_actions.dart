@@ -103,3 +103,42 @@ class ActionAddNewShape implements Action {
     appData.forceNotifyListeners();
   }
 }
+
+class ActionChangeBackgroundColor implements Action {
+  final AppData appData;
+  final Color oldColor;
+  final Color newColor;
+  
+  ActionChangeBackgroundColor(this.appData, this.oldColor, this.newColor);
+
+  @override
+  void undo() {
+    appData.setBackgroundColor(oldColor);
+  }
+
+  @override
+  void redo() {
+    appData.setBackgroundColor(newColor);
+  }
+}
+
+
+
+class ActionDeleteShape implements Action {
+  final AppData appData;
+  final int id;
+  final List<Shape> shapeList;
+
+  ActionDeleteShape(this.appData, this.id, this.shapeList);
+
+  @override
+  void undo(){
+    appData.shapesList.clear();
+    appData.shapesList = shapeList;
+  }
+
+  @override
+  void redo(){
+    appData.deleteShapeFromList(id);
+  }
+}

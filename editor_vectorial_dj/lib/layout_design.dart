@@ -18,6 +18,8 @@ class LayoutDesignState extends State<LayoutDesign> {
   final GlobalKey<UtilCustomScrollHorizontalState> _keyScrollX = GlobalKey();
   final GlobalKey<UtilCustomScrollVerticalState> _keyScrollY = GlobalKey();
   Offset _scrollCenter = const Offset(0, 0);
+  Offset dragStartPosition = Offset(0,0);
+  Offset dragStartOffset = Offset(0, 0);
   bool _isMouseButtonPressed = false;
   final FocusNode _focusNode = FocusNode();
 
@@ -145,13 +147,22 @@ class LayoutDesignState extends State<LayoutDesign> {
                         if (appData.toolSelected == "pointer_shapes") {
                           await appData.selectShapeAtPosition(docPosition,
                               event.localPosition, constraints, _scrollCenter);
+                          if (appData.shapeSelected > -1) {
+                            appData.getRecuadreForm(appData.shapeSelected);  ///
+                            dragStartPosition = appData.shapesList[appData.shapeSelected].position;
+                            dragStartOffset = docPosition - dragStartPosition;
+                          }       
                         }
                         if (appData.toolSelected == "shape_drawing") {
+                          appData.setShapeSelected(-1);
                           appData.addNewShape(docPosition);
                         }
                         setState(() {});
                       },
                       onPointerMove: (event) {
+                        Size docSize = Size(appData.docSize.width, appData.docSize.height);
+                        Offset docPosition = _getDocPosition(event.localPosition, appData.zoom, constraints, docSize, _scrollCenter);
+
                         if (_isMouseButtonPressed) {
                           if (appData.toolSelected == "shape_drawing") {
                             Size docSize = Size(
@@ -163,6 +174,13 @@ class LayoutDesignState extends State<LayoutDesign> {
                                 docSize,
                                 _scrollCenter));
                           }
+                          if (appData.toolSelected == "pointer_shapes" && appData.shapeSelected != -1) {
+                            Offset newShapePosition = docPosition - dragStartOffset;
+                            appData.changeShapePosition(newShapePosition); 
+                            appData.getRecuadreForm(appData.shapeSelected);
+                            appData.forceNotifyListeners();
+                          }
+
                         }
                         if (_isMouseButtonPressed &&
                             appData.toolSelected == "view_grab") {
@@ -180,6 +198,16 @@ class LayoutDesignState extends State<LayoutDesign> {
                         _isMouseButtonPressed = false;
                         if (appData.toolSelected == "shape_drawing") {
                           appData.addNewShapeToShapesList();
+                        }
+                        if (appData.toolSelected == "pointer_shapes" && appData.shapeSelected != -1) {
+                          Size docSize = Size(appData.docSize.width, appData.docSize.height);
+                          Offset docPosition = _getDocPosition(event.localPosition, appData.zoom, constraints, docSize, _scrollCenter);
+                          Offset newShapePosition = docPosition - dragStartOffset;
+                          if (dragStartPosition != newShapePosition) {
+                            appData.shapesList[appData.shapeSelected].setPosition(newShapePosition);
+                            appData.getRecuadreForm(appData.shapeSelected);
+                            appData.forceNotifyListeners();
+                          }
                         }
                         setState(() {});
                       },

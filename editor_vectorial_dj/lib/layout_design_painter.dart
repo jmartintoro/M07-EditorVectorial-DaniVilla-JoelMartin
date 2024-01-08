@@ -202,8 +202,11 @@ class LayoutDesignPainter extends CustomPainter {
       paint.shader = _shaderGrid;
       canvas.drawRect(Rect.fromLTWH(0, 0, docW, docH), paint);
     }
-
-    // Dibuixa el fons del document aquí ...
+    
+    //BackgroundColor
+    Paint backPainter = Paint();
+    backPainter.color = appData.backgroundColor;
+    canvas.drawRect(Rect.fromLTWH(0, 0, docW, docH), backPainter);
 
     // Dibuixa la llista de poligons (segons correspon, relatiu a la seva posició)
     if (appData.shapesList.isNotEmpty) {
@@ -219,7 +222,7 @@ class LayoutDesignPainter extends CustomPainter {
     paintShape(canvas, shape);
 
     //Recuadro al rededor de Shape
-    if (appData.paintRecuadre && appData.recuadrePositions.length == 4) {
+    if (appData.shapeSelected > -1 && appData.recuadrePositions.length == 4) {
       paintRecuadre(
           canvas,
           appData.recuadrePositions[0],

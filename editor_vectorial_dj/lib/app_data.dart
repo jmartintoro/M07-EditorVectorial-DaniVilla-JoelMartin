@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk_theme.dart';
 import 'app_click_selector.dart';
 import 'app_data_actions.dart';
@@ -10,6 +13,7 @@ class AppData with ChangeNotifier {
   // AppData appData = Provider.of<AppData>(context, listen: false)
 
   ActionManager actionManager = ActionManager();
+  late BuildContext cont;
   bool isAltOptionKeyPressed = false;
   double zoom = 95;
   Size docSize = const Size(500, 400);
@@ -19,8 +23,8 @@ class AppData with ChangeNotifier {
   int shapeSelected = -1;
   int shapeSelectedPrevious = -1;
 
+  Color backgroundColor = Colors.transparent;
   Color strokeColor = CDKTheme.black;
-  bool paintRecuadre = false;
   List<double> recuadrePositions = []; //[x1,x2,y1,y2]
 
   bool readyExample = false;
@@ -71,6 +75,11 @@ class AppData with ChangeNotifier {
     actionManager.register(ActionSetDocHeight(this, previousHeight, value));
   }
 
+  void setBackgroundColor(Color color) {
+    //actionManager.register(ActionChangeBackgroundColor(this, backgroundColor, color));
+    backgroundColor = color;
+  }
+
   void setToolSelected(String name) {
     toolSelected = name;
     notifyListeners();
@@ -78,7 +87,18 @@ class AppData with ChangeNotifier {
 
   void setShapeSelected(int index) {
     shapeSelected = index;
+
+    if (index > -1){
+      newShape.strokeWidth = shapesList[index].strokeWidth;
+      strokeColor = shapesList[index].strokeColor;
+    }
     notifyListeners();
+  }
+
+  void changeShapePosition(Offset newShapePosition) {
+    Shape oldShape = shapesList[shapeSelected];
+    shapesList[shapeSelected].setPosition(newShapePosition);
+    
   }
 
   Future<void> selectShapeAtPosition(Offset docPosition, Offset localPosition,
@@ -93,6 +113,23 @@ class AppData with ChangeNotifier {
     newShape.setPosition(position);
     newShape.addPoint(const Offset(0, 0));
     newShape.setInitialPosition(newShape.position);
+    notifyListeners();
+  }
+
+  Future<void> addNewShapeFromClipboard() async {
+    try {
+      ClipboardData? clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+      String? t = clipboardData?.text;
+
+      if (clipboardData != null) {
+        Shape newShape = Shape.fromMap(json.decode(t!) as Map<String, dynamic>);
+        shapesList.add(newShape);
+        //actionManager.register(ActionAddNewShape(this, newShape));
+      } else {}
+    } catch (e) {
+      print('Error al obtener datos del portapapeles: $e');
+    }
+    
     notifyListeners();
   }
 
@@ -117,17 +154,32 @@ class AppData with ChangeNotifier {
     notifyListeners();
   }
 
-  void getRecuadreForm(int shapeIndex, Shape shape) {
-    double initialX = shape.initialPosition.dx;
-    double initialY = shape.initialPosition.dy;
+  void deleteShapeFromList(int shapeIndex) {
+    shapesList.remove(shapesList[shapeIndex]);
+    //actionManager.register(ActionDeleteShape(this, shapeIndex, shapesList));
+    setShapeSelected(-1);
+    notifyListeners();
+  }
+
+  Future<void> copyToClipboard() async {
+    await Clipboard.setData(ClipboardData(text: jsonEncode(shapesList[shapeSelected].toMap())));
+  }
+
+
+  void getRecuadreForm(int shapeIndex) {
+    Shape shape = shapesList[shapeIndex];
+    double initialX = shape.position.dx;
+    double initialY = shape.position.dy;
 
     double strokeWidth = shape.strokeWidth;
 
-    double x1 =
-        shapesList[shapeIndex].vertices[0].dx + initialX - strokeWidth / 2; //x més baixa
+    double x1 = shapesList[shapeIndex].vertices[0].dx +
+        initialX -
+        strokeWidth / 2; //x més baixa
     double x2 = 0; //x més alta
-    double y1 =
-        shapesList[shapeIndex].vertices[0].dy + initialY - strokeWidth / 2; //y més baixa
+    double y1 = shapesList[shapeIndex].vertices[0].dy +
+        initialY -
+        strokeWidth / 2; //y més baixa
     double y2 = 0; //y més alta
 
     for (Offset of in shapesList[shapeIndex].vertices) {

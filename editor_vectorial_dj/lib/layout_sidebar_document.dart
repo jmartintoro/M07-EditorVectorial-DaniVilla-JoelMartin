@@ -11,9 +11,15 @@ class LayoutSidebarDocument extends StatefulWidget {
 }
 
 class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
+  //Para backgroundColor
+  late Widget _preloadedColorPicker;
+  final GlobalKey<CDKDialogPopoverState> _anchorColorButton = GlobalKey();
+  final ValueNotifier<Color> _valueColorNotifier = ValueNotifier(CDKTheme.black);
+
   @override
   Widget build(BuildContext context) {
     AppData appData = Provider.of<AppData>(context);
+    _preloadedColorPicker = _buildPreloadedColorPicker(appData);
 
     TextStyle fontBold =
         const TextStyle(fontSize: 12, fontWeight: FontWeight.bold);
@@ -84,12 +90,56 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                         width: labelsWidth,
                         child: Text("Background color:", style: font)),
                     const SizedBox(width: 4),
+                    CDKButtonColor(
+                      key: _anchorColorButton,
+                      color: appData.backgroundColor,
+                      onPressed: () {
+                        _showPopoverColor(context, _anchorColorButton);
+                      },
+                      
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
               ]);
         },
       ),
+    );
+  }
+
+  Widget _buildPreloadedColorPicker(AppData data) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ValueListenableBuilder<Color>(
+        valueListenable: _valueColorNotifier,
+        builder: (context, value, child) {
+          return CDKPickerColor(
+            color: value,
+            onChanged: (color) {
+              data.backgroundColor = color;
+              data.notifyListeners();
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  void _showPopoverColor(BuildContext context, GlobalKey anchorKey) {
+    final GlobalKey<CDKDialogPopoverArrowedState> key = GlobalKey();
+    
+    if (anchorKey.currentContext == null) {
+      print("Error: anchorKey not assigned to a widget");
+      return;
+    }
+    CDKDialogsManager.showPopoverArrowed(
+      key: key, 
+      context: context, 
+      anchorKey: anchorKey, 
+      isAnimated: true,
+      isTranslucent: true,
+      child: _preloadedColorPicker,
+      
     );
   }
 }

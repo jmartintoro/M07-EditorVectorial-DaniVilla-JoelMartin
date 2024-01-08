@@ -41,6 +41,64 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
           return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text("Coordinates:", style: fontBold,),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      width: labelsWidth,
+                      child: Text("Offset x:", style: font,),
+                    ),
+                    const SizedBox(width: 4,),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: 80,
+                      child: CDKFieldNumeric(
+                        value: appData.shapeSelected != -1 ? appData.shapesList[appData.shapeSelected].position.dx : 0.00,
+                        enabled: appData.shapeSelected != -1 ? true : false,
+                        increment: 1,
+                        decimals: 2,
+                        onValueChanged: (value) {
+                          appData.shapesList[appData.shapeSelected].setInitialPosition(Offset(value, appData.shapesList[appData.shapeSelected].position.dy));
+                          appData.getRecuadreForm(appData.shapeSelected);
+                          appData.shapesList[appData.shapeSelected].position = Offset(value, appData.shapesList[appData.shapeSelected].position.dy);
+                          appData.notifyListeners();
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      width: labelsWidth,
+                      child: Text("Offset y:", style: font,),
+                    ),
+                    SizedBox(width: 4,),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: 80,
+                      child: CDKFieldNumeric(
+                        value: appData.shapeSelected != -1 ? appData.shapesList[appData.shapeSelected].position.dy : 0.00,
+                        enabled: appData.shapeSelected != -1 ? true : false,
+                        increment: 1,
+                        decimals: 2,
+                        onValueChanged: (value) {
+                          appData.shapesList[appData.shapeSelected].setInitialPosition(Offset(appData.shapesList[appData.shapeSelected].position.dx, value));
+                          appData.getRecuadreForm(appData.shapeSelected);
+                          appData.shapesList[appData.shapeSelected].position = Offset(appData.shapesList[appData.shapeSelected].position.dx, value);
+                          appData.notifyListeners();
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 10,),
                 Text("Stroke and fill:", style: fontBold),
                 const SizedBox(height: 8),
                 Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -54,13 +112,22 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                       width: 80,
                       child: CDKFieldNumeric(
                         value: appData.newShape.strokeWidth,
-                        min: 0.01,
+                        min: 0.5,
                         max: 100,
                         units: "px",
                         increment: 0.5,
                         decimals: 2,
                         onValueChanged: (value) {
-                          appData.setNewShapeStrokeWidth(value);
+                          setState(() {
+                            if (appData.shapeSelected > -1) {
+                              appData.shapesList[appData.shapeSelected].strokeWidth = value;
+                              appData.newShape.strokeWidth = value;
+                              appData.getRecuadreForm(appData.shapeSelected);
+                              appData.forceNotifyListeners();
+                            } else {
+                              appData.setNewShapeStrokeWidth(value);
+                            }
+                          });
                         },
                       )),
                 ]),
@@ -75,7 +142,7 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                     const SizedBox(width: 4),
                     CDKButtonColor(
                       key: _anchorColorButton,
-                      color: _valueColorNotifier.value,
+                      color: appData.strokeColor,
                       onPressed: () {
                         _showPopoverColor(context, _anchorColorButton);
                       },
@@ -117,8 +184,15 @@ Widget _buildPreloadedColorPicker(AppData data) {
           color: value,
           onChanged: (color) {
             setState(() {
-              data.strokeColor = color;
-              _valueColorNotifier.value = color;
+              if (data.shapeSelected > -1) {
+                data.shapesList[data.shapeSelected].strokeColor = color;
+                data.newShape.strokeColor = color;
+                data.strokeColor = color;
+                data.forceNotifyListeners();
+              } else {
+                data.strokeColor = color;
+                _valueColorNotifier.value = color;
+              }
             });
           },
         );

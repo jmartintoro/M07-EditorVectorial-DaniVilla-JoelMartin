@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'package:editor_vectorial_dj/util_shape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk.dart';
@@ -29,15 +30,62 @@ void main() async {
           (Platform.isWindows && event.isControlPressed);
       bool isShiftPressed = event.isShiftPressed;
       bool isZPressed = event.logicalKey == LogicalKeyboardKey.keyZ;
+      bool isDeletePressed = event.logicalKey == LogicalKeyboardKey.delete;
+      bool isBackspacePressed =
+          event.logicalKey == LogicalKeyboardKey.backspace;
+      bool isPpressed = event.logicalKey == LogicalKeyboardKey.keyP;
+      bool isDpressed = event.logicalKey == LogicalKeyboardKey.keyD;
+      bool isGpressed = event.logicalKey == LogicalKeyboardKey.keyG;
+      bool isCpressed = event.logicalKey == LogicalKeyboardKey.keyC;
+      bool isXpressed = event.logicalKey == LogicalKeyboardKey.keyX;
+      bool isVpressed = event.logicalKey == LogicalKeyboardKey.keyV;
+      bool isYpressed = event.logicalKey == LogicalKeyboardKey.keyY;
 
       if (event is RawKeyDownEvent) {
         if (isControlPressed && isZPressed && !isShiftPressed) {
           appData.actionManager.undo();
           return KeyEventResult.handled;
-        } else if (isControlPressed && isShiftPressed && isZPressed) {
+        } else if ((isControlPressed && isShiftPressed && isZPressed) ||
+            (isControlPressed && isYpressed)) {
           appData.actionManager.redo();
           return KeyEventResult.handled;
         }
+        //Per eliminar un Shape (Ctrl+Supr), Copiar (Ctrl+C), Retallar (Ctrl+X), Pegar (Ctrl+V)
+        if (isControlPressed &&
+            (isDeletePressed || isBackspacePressed) &&
+            appData.shapeSelected != -1) {
+          appData.deleteShapeFromList(appData.shapeSelected);
+          return KeyEventResult.handled;
+        } else if (isControlPressed && isCpressed) {
+          //Ctrl+C
+          if (appData.shapeSelected > -1) {
+            appData.copyToClipboard();
+            return KeyEventResult.handled;
+          }
+        } else if (isControlPressed && isVpressed) {
+          appData.addNewShapeFromClipboard();
+          appData.notifyListeners();
+        } else if (isControlPressed && isXpressed) {
+          if (appData.shapeSelected > -1) {
+            appData.copyToClipboard();
+            appData.deleteShapeFromList(appData.shapeSelected);
+            appData.notifyListeners();
+            return KeyEventResult.handled;
+          }
+        }
+
+        //Shortcuts per cambiar entre eines (P,D,G)
+        if (isPpressed) {
+          appData.setToolSelected("pointer_shapes");
+          return KeyEventResult.handled;
+        } else if (isDpressed) {
+          appData.setToolSelected("shape_drawing");
+          return KeyEventResult.handled;
+        } else if (isGpressed) {
+          appData.setToolSelected("view_grab");
+          return KeyEventResult.handled;
+        }
+
         if (event.logicalKey == LogicalKeyboardKey.altLeft) {
           appData.isAltOptionKeyPressed = true;
         }
