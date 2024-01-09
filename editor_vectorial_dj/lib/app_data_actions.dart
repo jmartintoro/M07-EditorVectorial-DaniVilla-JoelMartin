@@ -108,7 +108,7 @@ class ActionChangeBackgroundColor implements Action {
   final AppData appData;
   final Color oldColor;
   final Color newColor;
-  
+
   ActionChangeBackgroundColor(this.appData, this.oldColor, this.newColor);
 
   @override
@@ -122,8 +122,6 @@ class ActionChangeBackgroundColor implements Action {
   }
 }
 
-
-
 class ActionDeleteShape implements Action {
   final AppData appData;
   final int id;
@@ -132,13 +130,35 @@ class ActionDeleteShape implements Action {
   ActionDeleteShape(this.appData, this.id, this.shapeList);
 
   @override
-  void undo(){
+  void undo() {
     appData.shapesList.clear();
     appData.shapesList = shapeList;
   }
 
   @override
-  void redo(){
+  void redo() {
     appData.deleteShapeFromList(id);
   }
 }
+
+////////////////////
+class ActionChangeClosed implements Action {
+  final AppData appData;
+  final bool newValue;
+  final int id;
+
+  ActionChangeClosed(this.appData, this.id, this.newValue);
+
+  @override
+  void undo() {
+    appData.shapesList[id].setClosed(!newValue);
+    appData.notifyListeners();
+  }
+
+  @override
+  void redo() {
+    appData.shapesList[id].setClosed(newValue);
+    appData.notifyListeners();
+  }
+}
+  //////////////////

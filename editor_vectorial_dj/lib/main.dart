@@ -43,10 +43,14 @@ void main() async {
 
       if (event is RawKeyDownEvent) {
         if (isControlPressed && isZPressed && !isShiftPressed) {
+          appData.setShapeSelected(
+              -1); ////////////////////////////////////////////
           appData.actionManager.undo();
           return KeyEventResult.handled;
         } else if ((isControlPressed && isShiftPressed && isZPressed) ||
             (isControlPressed && isYpressed)) {
+          appData.setShapeSelected(
+              -1); ////////////////////////////////////////////
           appData.actionManager.redo();
           return KeyEventResult.handled;
         }

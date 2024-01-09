@@ -1,17 +1,30 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk_theme.dart';
 
 class Shape {
   Offset position = const Offset(0, 0);
   Size scale = const Size(1, 1);
   Color strokeColor = CDKTheme.black;
-  double strokeWidth= 1;
+  Color fillColor = Colors.transparent; //////////////////////
+  bool closed = false; /////////////////////
+  double strokeWidth = 1;
   Offset initialPosition = Offset(0, 0);
   double rotation = 0;
   List<Offset> vertices = [];
 
   Shape();
 
+  ////////
+  void setFillColor(Color c) {
+    fillColor = c;
+  }
+
+  void setClosed(bool close) {
+    closed = close;
+  }
+
+  ////////
   void setStrokeWidth(double newWeight) {
     strokeWidth = newWeight;
   }
@@ -63,7 +76,7 @@ class Shape {
         'position': {'dx': position.dx, 'dy': position.dy},
         'vertices': vertices.map((v) => {'dx': v.dx, 'dy': v.dy}).toList(),
         'strokeWidth': strokeWidth,
-        'strokeColor': strokeColor.value, 
+        'strokeColor': strokeColor.value,
       }
     };
   }
@@ -73,14 +86,14 @@ class Shape {
     if (map['type'] != 'shape_drawing') {
       throw Exception('Type is not a shape_drawing');
     }
- 
+
     var objectMap = map['object'] as Map<String, dynamic>;
     var shape = Shape()
       ..setPosition(
           Offset(objectMap['position']['dx'], objectMap['position']['dy']))
       ..setStrokeWidth(objectMap['strokeWidth'])
       ..setStrokeColor(Color(objectMap['strokeColor']));
- 
+
     if (objectMap['vertices'] != null) {
       var verticesList = objectMap['vertices'] as List;
       shape.vertices =
@@ -88,6 +101,4 @@ class Shape {
     }
     return shape;
   }
-
-
 }

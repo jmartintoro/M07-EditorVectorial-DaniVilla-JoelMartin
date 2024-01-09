@@ -15,6 +15,7 @@ class AppData with ChangeNotifier {
   ActionManager actionManager = ActionManager();
   late BuildContext cont;
   bool isAltOptionKeyPressed = false;
+  bool closeShape = false; //////////////////////////
   double zoom = 95;
   Size docSize = const Size(500, 400);
   String toolSelected = "shape_drawing";
@@ -38,6 +39,17 @@ class AppData with ChangeNotifier {
     zoom = value.clamp(25, 500);
     notifyListeners();
   }
+
+  ////////
+  void setCloseShape(bool value) {
+    closeShape = value;
+    if (shapeSelected > -1) {
+      shapesList[shapeSelected].closed = value;
+      actionManager.register(ActionChangeClosed(this, shapeSelected, value));
+    }
+    notifyListeners();
+  }
+  ////////
 
   void setZoomNormalized(double value) {
     if (value < 0 || value > 1) {
@@ -88,7 +100,7 @@ class AppData with ChangeNotifier {
   void setShapeSelected(int index) {
     shapeSelected = index;
 
-    if (index > -1){
+    if (index > -1) {
       newShape.strokeWidth = shapesList[index].strokeWidth;
       strokeColor = shapesList[index].strokeColor;
     }
@@ -98,7 +110,6 @@ class AppData with ChangeNotifier {
   void changeShapePosition(Offset newShapePosition) {
     Shape oldShape = shapesList[shapeSelected];
     shapesList[shapeSelected].setPosition(newShapePosition);
-    
   }
 
   Future<void> selectShapeAtPosition(Offset docPosition, Offset localPosition,
@@ -113,12 +124,14 @@ class AppData with ChangeNotifier {
     newShape.setPosition(position);
     newShape.addPoint(const Offset(0, 0));
     newShape.setInitialPosition(newShape.position);
+    newShape.setClosed(closeShape);
     notifyListeners();
   }
 
   Future<void> addNewShapeFromClipboard() async {
     try {
-      ClipboardData? clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+      ClipboardData? clipboardData =
+          await Clipboard.getData(Clipboard.kTextPlain);
       String? t = clipboardData?.text;
 
       if (clipboardData != null) {
@@ -129,7 +142,7 @@ class AppData with ChangeNotifier {
     } catch (e) {
       print('Error al obtener datos del portapapeles: $e');
     }
-    
+
     notifyListeners();
   }
 
@@ -162,9 +175,9 @@ class AppData with ChangeNotifier {
   }
 
   Future<void> copyToClipboard() async {
-    await Clipboard.setData(ClipboardData(text: jsonEncode(shapesList[shapeSelected].toMap())));
+    await Clipboard.setData(
+        ClipboardData(text: jsonEncode(shapesList[shapeSelected].toMap())));
   }
-
 
   void getRecuadreForm(int shapeIndex) {
     Shape shape = shapesList[shapeIndex];
