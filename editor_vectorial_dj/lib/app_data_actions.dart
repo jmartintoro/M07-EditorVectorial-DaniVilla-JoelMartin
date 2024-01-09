@@ -104,6 +104,7 @@ class ActionAddNewShape implements Action {
   }
 }
 
+//////////////////////////////////////////7
 class ActionChangeBackgroundColor implements Action {
   final AppData appData;
   final Color oldColor;
@@ -113,14 +114,17 @@ class ActionChangeBackgroundColor implements Action {
 
   @override
   void undo() {
-    appData.setBackgroundColor(oldColor);
+    appData.backgroundColor = oldColor;
+    appData.notifyListeners();
   }
 
   @override
   void redo() {
-    appData.setBackgroundColor(newColor);
+    appData.backgroundColor = newColor;
+    appData.notifyListeners();
   }
 }
+/////////////////////////////////////
 
 class ActionDeleteShape implements Action {
   final AppData appData;

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk.dart';
 import 'package:provider/provider.dart';
 import 'app_data.dart';
@@ -14,7 +15,9 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
   //Para backgroundColor
   late Widget _preloadedColorPicker;
   final GlobalKey<CDKDialogPopoverState> _anchorColorButton = GlobalKey();
-  final ValueNotifier<Color> _valueColorNotifier = ValueNotifier(CDKTheme.black);
+  final ValueNotifier<Color> _valueColorNotifier =
+      ValueNotifier(CDKTheme.black);
+  Color backColor = Colors.black;
 
   @override
   Widget build(BuildContext context) {
@@ -94,9 +97,8 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                       key: _anchorColorButton,
                       color: appData.backgroundColor,
                       onPressed: () {
-                        _showPopoverColor(context, _anchorColorButton);
+                        _showPopoverColor(context, _anchorColorButton, appData);
                       },
-                      
                     ),
                   ],
                 ),
@@ -117,6 +119,7 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
             color: value,
             onChanged: (color) {
               data.backgroundColor = color;
+              backColor = color; ///////////////
               data.notifyListeners();
             },
           );
@@ -125,21 +128,26 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
     );
   }
 
-  void _showPopoverColor(BuildContext context, GlobalKey anchorKey) {
+  void _showPopoverColor(
+      BuildContext context, GlobalKey anchorKey, AppData data) {
     final GlobalKey<CDKDialogPopoverArrowedState> key = GlobalKey();
-    
+
     if (anchorKey.currentContext == null) {
       print("Error: anchorKey not assigned to a widget");
       return;
     }
     CDKDialogsManager.showPopoverArrowed(
-      key: key, 
-      context: context, 
-      anchorKey: anchorKey, 
-      isAnimated: true,
-      isTranslucent: true,
-      child: _preloadedColorPicker,
-      
-    );
+        key: key,
+        context: context,
+        anchorKey: anchorKey,
+        isAnimated: true,
+        isTranslucent: true,
+        child: _preloadedColorPicker,
+        ///////////////
+        onHide: () {
+          data.setBackgroundColor(backColor);
+        }
+        ///////////
+        );
   }
 }

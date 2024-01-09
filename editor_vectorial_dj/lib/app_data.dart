@@ -25,6 +25,7 @@ class AppData with ChangeNotifier {
   int shapeSelectedPrevious = -1;
 
   Color backgroundColor = Colors.transparent;
+  Color oldBackColor = Colors.transparent; ///////////////////////
   Color strokeColor = CDKTheme.black;
   List<double> recuadrePositions = []; //[x1,x2,y1,y2]
 
@@ -87,10 +88,15 @@ class AppData with ChangeNotifier {
     actionManager.register(ActionSetDocHeight(this, previousHeight, value));
   }
 
+  ///////////////
   void setBackgroundColor(Color color) {
-    //actionManager.register(ActionChangeBackgroundColor(this, backgroundColor, color));
+    actionManager
+        .register(ActionChangeBackgroundColor(this, oldBackColor, color));
     backgroundColor = color;
+    oldBackColor = color;
+    notifyListeners();
   }
+  ////////////
 
   void setToolSelected(String name) {
     toolSelected = name;
