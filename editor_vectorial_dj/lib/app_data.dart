@@ -15,7 +15,11 @@ class AppData with ChangeNotifier {
   ActionManager actionManager = ActionManager();
   late BuildContext cont;
   bool isAltOptionKeyPressed = false;
+<<<<<<< HEAD
   bool closeShape = false;
+=======
+  bool closeShape = false; //////////////////////////
+>>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   double zoom = 95;
   Size docSize = const Size(500, 400);
   String toolSelected = "shape_drawing";
@@ -26,8 +30,13 @@ class AppData with ChangeNotifier {
   bool firstMultilineClick = true; //////////
 
   Color backgroundColor = Colors.transparent;
+<<<<<<< HEAD
   Color oldBackColor = Colors.transparent; 
   Color shapeFillColor = Colors.transparent;
+=======
+  Color oldBackColor = Colors.transparent; ///////////////////////
+  Color shapeFillColor = Colors.transparent; ///////////////
+>>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   Color strokeColor = CDKTheme.black;
   List<double> recuadrePositions = []; //[x1,x2,y1,y2]
 
@@ -43,6 +52,10 @@ class AppData with ChangeNotifier {
     notifyListeners();
   }
 
+<<<<<<< HEAD
+=======
+  ////////
+>>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   void setCloseShape(bool value) {
     closeShape = value;
     if (shapeSelected > -1) {
@@ -51,6 +64,10 @@ class AppData with ChangeNotifier {
     }
     notifyListeners();
   }
+<<<<<<< HEAD
+=======
+  ////////
+>>>>>>> 1d4c9663ef3eab8824693425171690915420852b
 
   void setZoomNormalized(double value) {
     if (value < 0 || value > 1) {
@@ -88,6 +105,7 @@ class AppData with ChangeNotifier {
     actionManager.register(ActionSetDocHeight(this, previousHeight, value));
   }
 
+  ///////////////
   void setBackgroundColor(Color color) {
     actionManager
         .register(ActionChangeBackgroundColor(this, oldBackColor, color));
@@ -95,6 +113,7 @@ class AppData with ChangeNotifier {
     oldBackColor = color;
     notifyListeners();
   }
+  ////////////
 
   void setToolSelected(String name) {
     toolSelected = name;
@@ -104,7 +123,7 @@ class AppData with ChangeNotifier {
   void setShapeSelected(int index) {
     shapeSelected = index;
 
-    if (index > -1){
+    if (index > -1) {
       newShape.strokeWidth = shapesList[index].strokeWidth;
       strokeColor = shapesList[index].strokeColor;
     }
@@ -114,7 +133,6 @@ class AppData with ChangeNotifier {
   void changeShapePosition(Offset newShapePosition) {
     Shape oldShape = shapesList[shapeSelected];
     shapesList[shapeSelected].setPosition(newShapePosition);
-    
   }
 
   Future<void> selectShapeAtPosition(Offset docPosition, Offset localPosition,
@@ -129,8 +147,13 @@ class AppData with ChangeNotifier {
     newShape.setPosition(position);
     newShape.addPoint(const Offset(0, 0));
     newShape.setInitialPosition(newShape.position);
+<<<<<<< HEAD
     newShape.setClosed(closeShape);       
     newShape.setFillColor(shapeFillColor);
+=======
+    newShape.setClosed(closeShape);        /////////////////////
+    newShape.setFillColor(shapeFillColor); ///////////////////////
+>>>>>>> 1d4c9663ef3eab8824693425171690915420852b
     notifyListeners();
   }
 
@@ -153,7 +176,8 @@ class AppData with ChangeNotifier {
 
   Future<void> addNewShapeFromClipboard() async {
     try {
-      ClipboardData? clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+      ClipboardData? clipboardData =
+          await Clipboard.getData(Clipboard.kTextPlain);
       String? t = clipboardData?.text;
 
       if (clipboardData != null) {
@@ -164,7 +188,7 @@ class AppData with ChangeNotifier {
     } catch (e) {
       print('Error al obtener datos del portapapeles: $e');
     }
-    
+
     notifyListeners();
   }
 
@@ -217,9 +241,9 @@ class AppData with ChangeNotifier {
   }
 
   Future<void> copyToClipboard() async {
-    await Clipboard.setData(ClipboardData(text: jsonEncode(shapesList[shapeSelected].toMap())));
+    await Clipboard.setData(
+        ClipboardData(text: jsonEncode(shapesList[shapeSelected].toMap())));
   }
-
 
   void getRecuadreForm(int shapeIndex) {
     Shape shape = shapesList[shapeIndex];

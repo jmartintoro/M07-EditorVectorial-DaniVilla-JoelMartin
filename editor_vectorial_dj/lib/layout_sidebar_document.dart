@@ -97,9 +97,8 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                       key: _anchorColorButton,
                       color: appData.backgroundColor,
                       onPressed: () {
-                        _showPopoverColor(context, _anchorColorButton);
+                        _showPopoverColor(context, _anchorColorButton, appData);
                       },
-                      
                     ),
                   ],
                 ),
@@ -120,7 +119,11 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
             color: value,
             onChanged: (color) {
               data.backgroundColor = color;
+<<<<<<< HEAD
               backColor = color;
+=======
+              backColor = color; ///////////////
+>>>>>>> 1d4c9663ef3eab8824693425171690915420852b
               data.notifyListeners();
             },
           );
@@ -129,21 +132,26 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
     );
   }
 
-  void _showPopoverColor(BuildContext context, GlobalKey anchorKey) {
+  void _showPopoverColor(
+      BuildContext context, GlobalKey anchorKey, AppData data) {
     final GlobalKey<CDKDialogPopoverArrowedState> key = GlobalKey();
-    
+
     if (anchorKey.currentContext == null) {
       print("Error: anchorKey not assigned to a widget");
       return;
     }
     CDKDialogsManager.showPopoverArrowed(
-      key: key, 
-      context: context, 
-      anchorKey: anchorKey, 
-      isAnimated: true,
-      isTranslucent: true,
-      child: _preloadedColorPicker,
-      
-    );
+        key: key,
+        context: context,
+        anchorKey: anchorKey,
+        isAnimated: true,
+        isTranslucent: true,
+        child: _preloadedColorPicker,
+        ///////////////
+        onHide: () {
+          data.setBackgroundColor(backColor);
+        }
+        ///////////
+        );
   }
 }

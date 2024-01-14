@@ -6,15 +6,25 @@ abstract class Shape { //////////
   Offset position = const Offset(0, 0);
   Size scale = const Size(1, 1);
   Color strokeColor = CDKTheme.black;
+<<<<<<< HEAD
   Color fillColor = Colors.transparent;
   bool closed = false;
   double strokeWidth= 1;
+=======
+  Color fillColor = Colors.transparent; //////////////////////
+  bool closed = false; /////////////////////
+  double strokeWidth = 1;
+>>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   Offset initialPosition = Offset(0, 0);
   double rotation = 0;
   List<Offset> vertices = [];
 
   Shape();
 
+<<<<<<< HEAD
+=======
+  ////////
+>>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   void setFillColor(Color c) {
     fillColor = c;
   }
@@ -23,6 +33,10 @@ abstract class Shape { //////////
     closed = close;
   }
 
+<<<<<<< HEAD
+=======
+  ////////
+>>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   void setStrokeWidth(double newWeight) {
     strokeWidth = newWeight;
   }
@@ -78,7 +92,7 @@ abstract class Shape { //////////
         'position': {'dx': position.dx, 'dy': position.dy},
         'vertices': vertices.map((v) => {'dx': v.dx, 'dy': v.dy}).toList(),
         'strokeWidth': strokeWidth,
-        'strokeColor': strokeColor.value, 
+        'strokeColor': strokeColor.value,
       }
     };
   }
@@ -88,14 +102,14 @@ abstract class Shape { //////////
     if (map['type'] != 'shape_drawing') {
       throw Exception('Type is not a shape_drawing');
     }
- 
+
     var objectMap = map['object'] as Map<String, dynamic>;
     var shape = ShapeDrawing()
       ..setPosition(
           Offset(objectMap['position']['dx'], objectMap['position']['dy']))
       ..setStrokeWidth(objectMap['strokeWidth'])
       ..setStrokeColor(Color(objectMap['strokeColor']));
- 
+
     if (objectMap['vertices'] != null) {
       var verticesList = objectMap['vertices'] as List;
       shape.vertices =
@@ -103,8 +117,6 @@ abstract class Shape { //////////
     }
     return shape;
   }
-
-
 }
 ////////////////////
 class ShapeDrawing extends Shape {
