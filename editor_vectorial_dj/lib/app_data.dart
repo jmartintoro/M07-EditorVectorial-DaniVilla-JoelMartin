@@ -26,6 +26,7 @@ class AppData with ChangeNotifier {
 
   Color backgroundColor = Colors.transparent;
   Color oldBackColor = Colors.transparent; ///////////////////////
+  Color shapeFillColor = Colors.transparent; ///////////////
   Color strokeColor = CDKTheme.black;
   List<double> recuadrePositions = []; //[x1,x2,y1,y2]
 
@@ -130,7 +131,8 @@ class AppData with ChangeNotifier {
     newShape.setPosition(position);
     newShape.addPoint(const Offset(0, 0));
     newShape.setInitialPosition(newShape.position);
-    newShape.setClosed(closeShape);
+    newShape.setClosed(closeShape);        /////////////////////
+    newShape.setFillColor(shapeFillColor); ///////////////////////
     notifyListeners();
   }
 

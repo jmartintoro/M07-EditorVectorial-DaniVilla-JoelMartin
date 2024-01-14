@@ -12,9 +12,13 @@ class LayoutSidebarFormat extends StatefulWidget {
 
 class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
   late Widget _preloadedColorPicker;
+  late Widget _preloadedColorPicker2;  ////////////////////////
   final GlobalKey<CDKDialogPopoverState> _anchorColorButton = GlobalKey();
+  final GlobalKey<CDKDialogPopoverState> _anchorColorButton2 = GlobalKey(); //////////////////////
   final ValueNotifier<Color> _valueColorNotifier =
       ValueNotifier(CDKTheme.black);
+  final ValueNotifier<Color> _valueColorNotifier2 =
+      ValueNotifier(CDKTheme.black);  //////////////////////////////////////////
 
   @override
   void initState() {
@@ -22,6 +26,7 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
     AppData appData = Provider.of<AppData>(context, listen: false);
 
     _preloadedColorPicker = _buildPreloadedColorPicker(appData);
+    _preloadedColorPicker2 = _buildPreloadedColorPicker2(appData); ///////////////////
   }
 
   @override
@@ -212,6 +217,25 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                     )
                   ],
                 ),
+                const SizedBox(height: 8,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.bottomRight,
+                      width: labelsWidth,
+                      child: Text("Fill Color",style: font,),
+                    ),
+                    const SizedBox(width: 4,),
+                    CDKButtonColor(
+                      key: _anchorColorButton2,
+                      color: appData.shapeFillColor,
+                      onPressed: () {
+                        _showPopoverColor2(context, _anchorColorButton2);
+                      },
+                    )
+                  ],
+                ),
                 //////////////////////////////////////
                 const SizedBox(height: 16),
               ]);
@@ -263,4 +287,51 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
       ),
     );
   }
+
+  /////////////////////
+  void _showPopoverColor2(BuildContext context, GlobalKey anchorKey) {
+    final GlobalKey<CDKDialogPopoverArrowedState> key = GlobalKey();
+    if (anchorKey.currentContext == null || !mounted) {
+      // ignore: avoid_print
+      print("Error: anchorKey not assigned to a widget");
+      return;
+    }
+    CDKDialogsManager.showPopoverArrowed(
+      key: key,
+      context: context,
+      anchorKey: anchorKey,
+      isAnimated: true,
+      isTranslucent: false,
+      child: _preloadedColorPicker2,
+    );
+  }
+
+  Widget _buildPreloadedColorPicker2(AppData data) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ValueListenableBuilder<Color>(
+        valueListenable: _valueColorNotifier2,
+        builder: (context, value, child) {
+          return CDKPickerColor(
+            color: value,
+            onChanged: (color) {
+              setState(() {
+                if (data.shapeSelected > -1) {
+                  data.shapesList[data.shapeSelected].fillColor = color;
+                  data.newShape.fillColor = color;
+                  data.shapeFillColor = color;
+                  data.forceNotifyListeners();
+                } else {
+                  data.shapeFillColor = color;
+                  _valueColorNotifier2.value = color;
+                  data.forceNotifyListeners();
+                }
+              });
+            },
+          );
+        },
+      ),
+    );
+  }
+  ////////////////////
 }
