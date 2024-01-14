@@ -15,11 +15,7 @@ class AppData with ChangeNotifier {
   ActionManager actionManager = ActionManager();
   late BuildContext cont;
   bool isAltOptionKeyPressed = false;
-<<<<<<< HEAD
   bool closeShape = false;
-=======
-  bool closeShape = false; //////////////////////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   double zoom = 95;
   Size docSize = const Size(500, 400);
   String toolSelected = "shape_drawing";
@@ -30,13 +26,8 @@ class AppData with ChangeNotifier {
   bool firstMultilineClick = true; //////////
 
   Color backgroundColor = Colors.transparent;
-<<<<<<< HEAD
   Color oldBackColor = Colors.transparent; 
   Color shapeFillColor = Colors.transparent;
-=======
-  Color oldBackColor = Colors.transparent; ///////////////////////
-  Color shapeFillColor = Colors.transparent; ///////////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   Color strokeColor = CDKTheme.black;
   List<double> recuadrePositions = []; //[x1,x2,y1,y2]
 
@@ -52,10 +43,6 @@ class AppData with ChangeNotifier {
     notifyListeners();
   }
 
-<<<<<<< HEAD
-=======
-  ////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   void setCloseShape(bool value) {
     closeShape = value;
     if (shapeSelected > -1) {
@@ -64,10 +51,6 @@ class AppData with ChangeNotifier {
     }
     notifyListeners();
   }
-<<<<<<< HEAD
-=======
-  ////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
 
   void setZoomNormalized(double value) {
     if (value < 0 || value > 1) {
@@ -147,13 +130,8 @@ class AppData with ChangeNotifier {
     newShape.setPosition(position);
     newShape.addPoint(const Offset(0, 0));
     newShape.setInitialPosition(newShape.position);
-<<<<<<< HEAD
     newShape.setClosed(closeShape);       
     newShape.setFillColor(shapeFillColor);
-=======
-    newShape.setClosed(closeShape);        /////////////////////
-    newShape.setFillColor(shapeFillColor); ///////////////////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
     notifyListeners();
   }
 

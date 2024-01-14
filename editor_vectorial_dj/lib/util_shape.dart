@@ -6,25 +6,15 @@ abstract class Shape { //////////
   Offset position = const Offset(0, 0);
   Size scale = const Size(1, 1);
   Color strokeColor = CDKTheme.black;
-<<<<<<< HEAD
   Color fillColor = Colors.transparent;
   bool closed = false;
   double strokeWidth= 1;
-=======
-  Color fillColor = Colors.transparent; //////////////////////
-  bool closed = false; /////////////////////
-  double strokeWidth = 1;
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   Offset initialPosition = Offset(0, 0);
   double rotation = 0;
   List<Offset> vertices = [];
 
   Shape();
 
-<<<<<<< HEAD
-=======
-  ////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   void setFillColor(Color c) {
     fillColor = c;
   }
@@ -33,10 +23,6 @@ abstract class Shape { //////////
     closed = close;
   }
 
-<<<<<<< HEAD
-=======
-  ////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
   void setStrokeWidth(double newWeight) {
     strokeWidth = newWeight;
   }

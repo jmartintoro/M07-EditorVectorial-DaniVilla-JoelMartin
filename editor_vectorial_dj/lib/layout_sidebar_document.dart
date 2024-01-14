@@ -119,11 +119,7 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
             color: value,
             onChanged: (color) {
               data.backgroundColor = color;
-<<<<<<< HEAD
               backColor = color;
-=======
-              backColor = color; ///////////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
               data.notifyListeners();
             },
           );

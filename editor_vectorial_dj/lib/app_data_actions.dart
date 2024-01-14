@@ -104,7 +104,6 @@ class ActionAddNewShape implements Action {
   }
 }
 
-//////////////////////////////////////////7
 class ActionChangeBackgroundColor implements Action {
   final AppData appData;
   final Color oldColor;
@@ -124,10 +123,6 @@ class ActionChangeBackgroundColor implements Action {
     appData.notifyListeners();
   }
 }
-<<<<<<< HEAD
-=======
-/////////////////////////////////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
 
 class ActionDeleteShape implements Action {
   final AppData appData;
@@ -148,10 +143,6 @@ class ActionDeleteShape implements Action {
   }
 }
 
-<<<<<<< HEAD
-=======
-////////////////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
 class ActionChangeClosed implements Action {
   final AppData appData;
   final bool newValue;
@@ -170,9 +161,4 @@ class ActionChangeClosed implements Action {
     appData.shapesList[id].setClosed(newValue);
     appData.notifyListeners();
   }
-<<<<<<< HEAD
 }
-=======
-}
-  //////////////////
->>>>>>> 1d4c9663ef3eab8824693425171690915420852b
