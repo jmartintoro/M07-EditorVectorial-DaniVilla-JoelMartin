@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk.dart';
 import 'package:provider/provider.dart';
 import 'app_data.dart';
@@ -14,7 +15,9 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
   //Para backgroundColor
   late Widget _preloadedColorPicker;
   final GlobalKey<CDKDialogPopoverState> _anchorColorButton = GlobalKey();
-  final ValueNotifier<Color> _valueColorNotifier = ValueNotifier(CDKTheme.black);
+  final ValueNotifier<Color> _valueColorNotifier =
+      ValueNotifier(CDKTheme.black);
+  Color backColor = Colors.black;
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +120,7 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
             color: value,
             onChanged: (color) {
               data.backgroundColor = color;
+              backColor = color;
               data.notifyListeners();
             },
           );

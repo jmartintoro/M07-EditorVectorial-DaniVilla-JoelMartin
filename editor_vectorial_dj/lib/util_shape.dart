@@ -1,16 +1,27 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk_theme.dart';
 
-class Shape {
+abstract class Shape { //////////
   Offset position = const Offset(0, 0);
   Size scale = const Size(1, 1);
   Color strokeColor = CDKTheme.black;
+  Color fillColor = Colors.transparent;
+  bool closed = false;
   double strokeWidth= 1;
   Offset initialPosition = Offset(0, 0);
   double rotation = 0;
   List<Offset> vertices = [];
 
   Shape();
+
+  void setFillColor(Color c) {
+    fillColor = c;
+  }
+
+  void setClosed(bool close) {
+    closed = close;
+  }
 
   void setStrokeWidth(double newWeight) {
     strokeWidth = newWeight;
@@ -43,7 +54,11 @@ class Shape {
   void addRelativePoint(Offset point) {
     vertices.add(Offset(point.dx - position.dx, point.dy - position.dy));
   }
-
+/////////
+  List getVertices() {
+    return vertices;
+  }
+//////////////
   void changeAllPropieties(Shape changeTo) {
     setPosition(changeTo.position);
     setScale(changeTo.scale);
@@ -75,7 +90,7 @@ class Shape {
     }
  
     var objectMap = map['object'] as Map<String, dynamic>;
-    var shape = Shape()
+    var shape = ShapeDrawing()
       ..setPosition(
           Offset(objectMap['position']['dx'], objectMap['position']['dy']))
       ..setStrokeWidth(objectMap['strokeWidth'])
@@ -91,3 +106,24 @@ class Shape {
 
 
 }
+////////////////////
+class ShapeDrawing extends Shape {
+
+}
+
+class ShapeLine extends Shape {
+
+}
+
+class ShapeMultiline extends Shape {
+  
+}
+
+class ShapeRectangle extends Shape {
+  
+}
+
+class ShapeEllipsis extends Shape {
+  
+}
+////////////////

@@ -103,7 +103,7 @@ class LayoutDesignState extends State<LayoutDesign> {
         } else {
           cursorShown = SystemMouseCursors.grab;
         }
-      } else if (appData.toolSelected == "shape_drawing") {
+      } else /*if (appData.toolSelected == "shape_drawing")*/ { ////////////
         cursorShown = SystemMouseCursors.precise;
       }
 
@@ -143,20 +143,54 @@ class LayoutDesignState extends State<LayoutDesign> {
                             appData.zoom,
                             constraints,
                             docSize,
-                            _scrollCenter);
+                            _scrollCenter);                        
                         if (appData.toolSelected == "pointer_shapes") {
                           await appData.selectShapeAtPosition(docPosition,
                               event.localPosition, constraints, _scrollCenter);
                           if (appData.shapeSelected > -1) {
-                            appData.getRecuadreForm(appData.shapeSelected);  ///
+                            appData.getRecuadreForm(appData.shapeSelected);  /////
                             dragStartPosition = appData.shapesList[appData.shapeSelected].position;
                             dragStartOffset = docPosition - dragStartPosition;
                           }       
                         }
-                        if (appData.toolSelected == "shape_drawing") {
+                        if (appData.toolSelected == "shape_drawing" || appData.toolSelected == "shape_line") { //////////////
                           appData.setShapeSelected(-1);
                           appData.addNewShape(docPosition);
                         }
+                        ////////////
+                        if (appData.toolSelected == "shape_multiline") {
+                          appData.setShapeSelected(-1);
+                          if (appData.firstMultilineClick){
+                            appData.addNewShape(docPosition);
+                            appData.firstMultilineClick = false;
+                          } else if (appData.isAltOptionKeyPressed) {
+                            appData.firstMultilineClick = true;
+                            Size docSize = Size(
+                                appData.docSize.width, appData.docSize.height);
+                            appData.addRelativePointToNewShape(_getDocPosition(
+                                event.localPosition,
+                                appData.zoom,
+                                constraints,
+                                docSize,
+                                _scrollCenter));
+                            appData.addNewShapeToShapesList();
+                          } else{
+                            Size docSize = Size(
+                                appData.docSize.width, appData.docSize.height);
+                            appData.addRelativePointToNewShape(_getDocPosition(
+                                event.localPosition,
+                                appData.zoom,
+                                constraints,
+                                docSize,
+                                _scrollCenter));
+                          }
+                        }
+
+                        if (appData.toolSelected == "shape_rectangle") {
+                          appData.setShapeSelected(-1);
+                          appData.addNewShape(docPosition);
+                        }
+                        /////////
                         setState(() {});
                       },
                       onPointerMove: (event) {
@@ -174,6 +208,28 @@ class LayoutDesignState extends State<LayoutDesign> {
                                 docSize,
                                 _scrollCenter));
                           }
+                          ///////////////
+                          if (appData.toolSelected == "shape_line" || appData.toolSelected == "shape_multiline") {
+                            Size docSize = Size(
+                                appData.docSize.width, appData.docSize.height);
+                            appData.moveLastVertice(_getDocPosition(
+                                event.localPosition,
+                                appData.zoom,
+                                constraints,
+                                docSize,
+                                _scrollCenter));
+                          }
+                          if (appData.toolSelected == "shape_rectangle") {
+                            Size docSize = Size(
+                                appData.docSize.width, appData.docSize.height);
+                            appData.moveSquareVertices(_getDocPosition(
+                                event.localPosition,
+                                appData.zoom,
+                                constraints,
+                                docSize,
+                                _scrollCenter));
+                          }
+                          ////////////////
                           if (appData.toolSelected == "pointer_shapes" && appData.shapeSelected != -1) {
                             Offset newShapePosition = docPosition - dragStartOffset;
                             appData.changeShapePosition(newShapePosition); 
@@ -199,6 +255,30 @@ class LayoutDesignState extends State<LayoutDesign> {
                         if (appData.toolSelected == "shape_drawing") {
                           appData.addNewShapeToShapesList();
                         }
+                        //////////
+                        if (appData.toolSelected == "shape_line"){
+                          Size docSize = Size(
+                                appData.docSize.width, appData.docSize.height);
+                            appData.addRelativePointToNewShape(_getDocPosition(
+                                event.localPosition,
+                                appData.zoom,
+                                constraints,
+                                docSize,
+                                _scrollCenter));
+                          appData.addNewShapeToShapesList();
+                        }
+                        if (appData.toolSelected == "shape_rectangle") {
+                          Size docSize = Size(
+                                appData.docSize.width, appData.docSize.height);
+                            appData.addSquare(_getDocPosition(
+                                event.localPosition,
+                                appData.zoom,
+                                constraints,
+                                docSize,
+                                _scrollCenter));
+                          appData.addNewShapeToShapesList();
+                        }
+                        ////////
                         if (appData.toolSelected == "pointer_shapes" && appData.shapeSelected != -1) {
                           Size docSize = Size(appData.docSize.width, appData.docSize.height);
                           Offset docPosition = _getDocPosition(event.localPosition, appData.zoom, constraints, docSize, _scrollCenter);

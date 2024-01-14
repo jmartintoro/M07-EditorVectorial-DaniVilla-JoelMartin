@@ -148,6 +148,24 @@ class LayoutDesignPainter extends CustomPainter {
 
   static void paintShape(Canvas canvas, Shape shape) {
     if (shape.vertices.isNotEmpty) {
+      ///////// Fill
+      double fx = shape.position.dx + shape.vertices[0].dx;
+      double fy = shape.position.dy + shape.vertices[0].dy;
+      Paint fillPaint = Paint();
+      fillPaint.color = shape.fillColor;
+      fillPaint.strokeWidth = shape.strokeWidth;
+      fillPaint.style = PaintingStyle.fill;
+      Path fillPath = Path();
+      fillPath.moveTo(fx, fy);
+      for (int i = 1; i < shape.vertices.length; i++) {
+        fx = shape.position.dx + shape.vertices[i].dx;
+        fy = shape.position.dy + shape.vertices[i].dy;
+        fillPath.lineTo(fx, fy);
+      }
+      fillPath.close();
+      canvas.drawPath(fillPath, fillPaint);
+      /////////
+
       Paint paint = Paint();
       paint.color = shape.strokeColor;
       paint.style = PaintingStyle.stroke;
@@ -161,6 +179,11 @@ class LayoutDesignPainter extends CustomPainter {
         y = shape.position.dy + shape.vertices[i].dy;
         path.lineTo(x, y);
       }
+      /////////
+      if (shape.closed) {
+        path.close();
+      }
+      /////////
       canvas.drawPath(path, paint);
     }
   }
@@ -202,7 +225,7 @@ class LayoutDesignPainter extends CustomPainter {
       paint.shader = _shaderGrid;
       canvas.drawRect(Rect.fromLTWH(0, 0, docW, docH), paint);
     }
-    
+
     //BackgroundColor
     Paint backPainter = Paint();
     backPainter.color = appData.backgroundColor;

@@ -15,15 +15,19 @@ class AppData with ChangeNotifier {
   ActionManager actionManager = ActionManager();
   late BuildContext cont;
   bool isAltOptionKeyPressed = false;
+  bool closeShape = false;
   double zoom = 95;
   Size docSize = const Size(500, 400);
   String toolSelected = "shape_drawing";
-  Shape newShape = Shape();
+  Shape newShape = ShapeDrawing(); ///////////
   List<Shape> shapesList = [];
   int shapeSelected = -1;
   int shapeSelectedPrevious = -1;
+  bool firstMultilineClick = true; //////////
 
   Color backgroundColor = Colors.transparent;
+  Color oldBackColor = Colors.transparent; 
+  Color shapeFillColor = Colors.transparent;
   Color strokeColor = CDKTheme.black;
   List<double> recuadrePositions = []; //[x1,x2,y1,y2]
 
@@ -36,6 +40,15 @@ class AppData with ChangeNotifier {
 
   void setZoom(double value) {
     zoom = value.clamp(25, 500);
+    notifyListeners();
+  }
+
+  void setCloseShape(bool value) {
+    closeShape = value;
+    if (shapeSelected > -1) {
+      shapesList[shapeSelected].closed = value;
+      actionManager.register(ActionChangeClosed(this, shapeSelected, value));
+    }
     notifyListeners();
   }
 
@@ -76,8 +89,11 @@ class AppData with ChangeNotifier {
   }
 
   void setBackgroundColor(Color color) {
-    //actionManager.register(ActionChangeBackgroundColor(this, backgroundColor, color));
+    actionManager
+        .register(ActionChangeBackgroundColor(this, oldBackColor, color));
     backgroundColor = color;
+    oldBackColor = color;
+    notifyListeners();
   }
 
   void setToolSelected(String name) {
@@ -113,8 +129,27 @@ class AppData with ChangeNotifier {
     newShape.setPosition(position);
     newShape.addPoint(const Offset(0, 0));
     newShape.setInitialPosition(newShape.position);
+    newShape.setClosed(closeShape);       
+    newShape.setFillColor(shapeFillColor);
     notifyListeners();
   }
+
+  //////////////
+  void addNewSquare(Offset position) {
+    newShape.setPosition(position);
+    newShape.setInitialPosition(newShape.position);
+    notifyListeners();
+  }
+
+  void addSquare(Offset position) {
+    newShape.addRelativePoint(Offset(position.dx, newShape.initialPosition.dy));
+    newShape.addRelativePoint(Offset(position.dx, position.dy));
+    newShape.addRelativePoint(Offset(newShape.initialPosition.dx, position.dy));
+    newShape.addRelativePoint(Offset(newShape.initialPosition.dx, newShape.initialPosition.dy));
+    notifyListeners();
+  }
+  
+  //////////////
 
   Future<void> addNewShapeFromClipboard() async {
     try {
@@ -138,13 +173,33 @@ class AppData with ChangeNotifier {
     notifyListeners();
   }
 
+  /////////
+  void moveLastVertice(Offset point) {
+    if (newShape.getVertices().length >= 2) {
+      newShape.getVertices().removeLast();
+    }
+    newShape.addRelativePoint(point);
+    notifyListeners();
+  }
+
+  void moveSquareVertices(Offset point) {
+    if (newShape.getVertices().length >= 4) {
+      newShape.getVertices().removeLast();
+      newShape.getVertices().removeLast();
+      newShape.getVertices().removeLast();
+      newShape.getVertices().removeLast();
+    }
+    addSquare(point);
+  }
+  /////////
+  
   void addNewShapeToShapesList() {
     // Si no hi ha almenys 2 punts, no es podrà dibuixar res
     if (newShape.vertices.length >= 2) {
       newShape.setStrokeColor(strokeColor);
       double strokeWidthConfig = newShape.strokeWidth;
       actionManager.register(ActionAddNewShape(this, newShape));
-      newShape = Shape();
+      newShape = ShapeDrawing(); ///////
       newShape.setStrokeWidth(strokeWidthConfig);
     }
   }

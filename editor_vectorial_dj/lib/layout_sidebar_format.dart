@@ -11,11 +11,14 @@ class LayoutSidebarFormat extends StatefulWidget {
 }
 
 class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
-
   late Widget _preloadedColorPicker;
+  late Widget _preloadedColorPicker2;  ////////////////////////
   final GlobalKey<CDKDialogPopoverState> _anchorColorButton = GlobalKey();
+  final GlobalKey<CDKDialogPopoverState> _anchorColorButton2 = GlobalKey(); //////////////////////
   final ValueNotifier<Color> _valueColorNotifier =
       ValueNotifier(CDKTheme.black);
+  final ValueNotifier<Color> _valueColorNotifier2 =
+      ValueNotifier(CDKTheme.black);  //////////////////////////////////////////
 
   @override
   void initState() {
@@ -23,6 +26,7 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
     AppData appData = Provider.of<AppData>(context, listen: false);
 
     _preloadedColorPicker = _buildPreloadedColorPicker(appData);
+    _preloadedColorPicker2 = _buildPreloadedColorPicker2(appData); ///////////////////
   }
 
   @override
@@ -41,7 +45,10 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
           return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Coordinates:", style: fontBold,),
+                Text(
+                  "Coordinates:",
+                  style: fontBold,
+                ),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -49,21 +56,37 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                     Container(
                       alignment: Alignment.centerRight,
                       width: labelsWidth,
-                      child: Text("Offset x:", style: font,),
+                      child: Text(
+                        "Offset x:",
+                        style: font,
+                      ),
                     ),
-                    const SizedBox(width: 4,),
+                    const SizedBox(
+                      width: 4,
+                    ),
                     Container(
                       alignment: Alignment.centerLeft,
                       width: 80,
                       child: CDKFieldNumeric(
-                        value: appData.shapeSelected != -1 ? appData.shapesList[appData.shapeSelected].position.dx : 0.00,
+                        value: appData.shapeSelected != -1
+                            ? appData
+                                .shapesList[appData.shapeSelected].position.dx
+                            : 0.00,
                         enabled: appData.shapeSelected != -1 ? true : false,
                         increment: 1,
                         decimals: 2,
                         onValueChanged: (value) {
-                          appData.shapesList[appData.shapeSelected].setInitialPosition(Offset(value, appData.shapesList[appData.shapeSelected].position.dy));
+                          appData.shapesList[appData.shapeSelected]
+                              .setInitialPosition(Offset(
+                                  value,
+                                  appData.shapesList[appData.shapeSelected]
+                                      .position.dy));
                           appData.getRecuadreForm(appData.shapeSelected);
-                          appData.shapesList[appData.shapeSelected].position = Offset(value, appData.shapesList[appData.shapeSelected].position.dy);
+                          appData.shapesList[appData.shapeSelected].position =
+                              Offset(
+                                  value,
+                                  appData.shapesList[appData.shapeSelected]
+                                      .position.dy);
                           appData.notifyListeners();
                         },
                       ),
@@ -77,28 +100,46 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                     Container(
                       alignment: Alignment.centerRight,
                       width: labelsWidth,
-                      child: Text("Offset y:", style: font,),
+                      child: Text(
+                        "Offset y:",
+                        style: font,
+                      ),
                     ),
-                    SizedBox(width: 4,),
+                    SizedBox(
+                      width: 4,
+                    ),
                     Container(
                       alignment: Alignment.centerLeft,
                       width: 80,
                       child: CDKFieldNumeric(
-                        value: appData.shapeSelected != -1 ? appData.shapesList[appData.shapeSelected].position.dy : 0.00,
+                        value: appData.shapeSelected != -1
+                            ? appData
+                                .shapesList[appData.shapeSelected].position.dy
+                            : 0.00,
                         enabled: appData.shapeSelected != -1 ? true : false,
                         increment: 1,
                         decimals: 2,
                         onValueChanged: (value) {
-                          appData.shapesList[appData.shapeSelected].setInitialPosition(Offset(appData.shapesList[appData.shapeSelected].position.dx, value));
+                          appData.shapesList[appData.shapeSelected]
+                              .setInitialPosition(Offset(
+                                  appData.shapesList[appData.shapeSelected]
+                                      .position.dx,
+                                  value));
                           appData.getRecuadreForm(appData.shapeSelected);
-                          appData.shapesList[appData.shapeSelected].position = Offset(appData.shapesList[appData.shapeSelected].position.dx, value);
+                          appData.shapesList[appData.shapeSelected].position =
+                              Offset(
+                                  appData.shapesList[appData.shapeSelected]
+                                      .position.dx,
+                                  value);
                           appData.notifyListeners();
                         },
                       ),
                     )
                   ],
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 Text("Stroke and fill:", style: fontBold),
                 const SizedBox(height: 8),
                 Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -120,7 +161,8 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                         onValueChanged: (value) {
                           setState(() {
                             if (appData.shapeSelected > -1) {
-                              appData.shapesList[appData.shapeSelected].strokeWidth = value;
+                              appData.shapesList[appData.shapeSelected]
+                                  .strokeWidth = value;
                               appData.newShape.strokeWidth = value;
                               appData.getRecuadreForm(appData.shapeSelected);
                               appData.forceNotifyListeners();
@@ -149,6 +191,52 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                     ),
                   ],
                 ),
+                ////////////////////////////////////////////////
+                const SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      width: labelsWidth,
+                      child: Text(
+                        "Close Shape:",
+                        style: font,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    CDKButtonCheckBox(
+                      value: appData.shapeSelected > -1 ? appData.shapesList[appData.shapeSelected].closed : appData.closeShape,
+                      onChanged: (value) {
+                        appData.setCloseShape(!appData.closeShape);
+                      },
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.bottomRight,
+                      width: labelsWidth,
+                      child: Text("Fill Color",style: font,),
+                    ),
+                    const SizedBox(width: 4,),
+                    CDKButtonColor(
+                      key: _anchorColorButton2,
+                      color: appData.shapeFillColor,
+                      onPressed: () {
+                        _showPopoverColor2(context, _anchorColorButton2);
+                      },
+                    )
+                  ],
+                ),
+                //////////////////////////////////////
                 const SizedBox(height: 16),
               ]);
         },
@@ -156,48 +244,94 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
     );
   }
 
-
-void _showPopoverColor(BuildContext context, GlobalKey anchorKey) {
-  final GlobalKey<CDKDialogPopoverArrowedState> key = GlobalKey();
-  if (anchorKey.currentContext == null || !mounted) {
-    // ignore: avoid_print
-    print("Error: anchorKey not assigned to a widget");
-    return;
+  void _showPopoverColor(BuildContext context, GlobalKey anchorKey) {
+    final GlobalKey<CDKDialogPopoverArrowedState> key = GlobalKey();
+    if (anchorKey.currentContext == null || !mounted) {
+      // ignore: avoid_print
+      print("Error: anchorKey not assigned to a widget");
+      return;
+    }
+    CDKDialogsManager.showPopoverArrowed(
+      key: key,
+      context: context,
+      anchorKey: anchorKey,
+      isAnimated: true,
+      isTranslucent: false,
+      child: _preloadedColorPicker,
+    );
   }
-  CDKDialogsManager.showPopoverArrowed(
-    key: key,
-    context: context,
-    anchorKey: anchorKey,
-    isAnimated: true,
-    isTranslucent: false,
-    child: _preloadedColorPicker,
-  );
-}
 
-Widget _buildPreloadedColorPicker(AppData data) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: ValueListenableBuilder<Color>(
-      valueListenable: _valueColorNotifier,
-      builder: (context, value, child) {
-        return CDKPickerColor(
-          color: value,
-          onChanged: (color) {
-            setState(() {
-              if (data.shapeSelected > -1) {
-                data.shapesList[data.shapeSelected].strokeColor = color;
-                data.newShape.strokeColor = color;
-                data.strokeColor = color;
-                data.forceNotifyListeners();
-              } else {
-                data.strokeColor = color;
-                _valueColorNotifier.value = color;
-              }
-            });
-          },
-        );
-      },
-    ),
-  );
-}
+  Widget _buildPreloadedColorPicker(AppData data) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ValueListenableBuilder<Color>(
+        valueListenable: _valueColorNotifier,
+        builder: (context, value, child) {
+          return CDKPickerColor(
+            color: value,
+            onChanged: (color) {
+              setState(() {
+                if (data.shapeSelected > -1) {
+                  data.shapesList[data.shapeSelected].strokeColor = color;
+                  data.newShape.strokeColor = color;
+                  data.strokeColor = color;
+                  data.forceNotifyListeners();
+                } else {
+                  data.strokeColor = color;
+                  _valueColorNotifier.value = color;
+                }
+              });
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  /////////////////////
+  void _showPopoverColor2(BuildContext context, GlobalKey anchorKey) {
+    final GlobalKey<CDKDialogPopoverArrowedState> key = GlobalKey();
+    if (anchorKey.currentContext == null || !mounted) {
+      // ignore: avoid_print
+      print("Error: anchorKey not assigned to a widget");
+      return;
+    }
+    CDKDialogsManager.showPopoverArrowed(
+      key: key,
+      context: context,
+      anchorKey: anchorKey,
+      isAnimated: true,
+      isTranslucent: false,
+      child: _preloadedColorPicker2,
+    );
+  }
+
+  Widget _buildPreloadedColorPicker2(AppData data) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ValueListenableBuilder<Color>(
+        valueListenable: _valueColorNotifier2,
+        builder: (context, value, child) {
+          return CDKPickerColor(
+            color: value,
+            onChanged: (color) {
+              setState(() {
+                if (data.shapeSelected > -1) {
+                  data.shapesList[data.shapeSelected].fillColor = color;
+                  data.newShape.fillColor = color;
+                  data.shapeFillColor = color;
+                  data.forceNotifyListeners();
+                } else {
+                  data.shapeFillColor = color;
+                  _valueColorNotifier2.value = color;
+                  data.forceNotifyListeners();
+                }
+              });
+            },
+          );
+        },
+      ),
+    );
+  }
+  ////////////////////
 }
