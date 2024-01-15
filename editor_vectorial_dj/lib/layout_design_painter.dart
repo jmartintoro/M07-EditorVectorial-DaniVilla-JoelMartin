@@ -156,14 +156,21 @@ class LayoutDesignPainter extends CustomPainter {
       fillPaint.strokeWidth = shape.strokeWidth;
       fillPaint.style = PaintingStyle.fill;
       Path fillPath = Path();
-      fillPath.moveTo(fx, fy);
-      for (int i = 1; i < shape.vertices.length; i++) {
-        fx = shape.position.dx + shape.vertices[i].dx;
-        fy = shape.position.dy + shape.vertices[i].dy;
-        fillPath.lineTo(fx, fy);
+
+      if (shape is ShapeEllipsis || shape.type == "eclipse") {
+        Rect eclipse = Rect.fromPoints(Offset(fx,fy), Offset(fx,fy) + shape.vertices[shape.vertices.length-1]);
+        canvas.drawOval(eclipse, fillPaint);
+
+      } else {
+        fillPath.moveTo(fx, fy);
+        for (int i = 1; i < shape.vertices.length; i++) {
+          fx = shape.position.dx + shape.vertices[i].dx;
+          fy = shape.position.dy + shape.vertices[i].dy;
+          fillPath.lineTo(fx, fy);
+        }
+        fillPath.close();
+        canvas.drawPath(fillPath, fillPaint);
       }
-      fillPath.close();
-      canvas.drawPath(fillPath, fillPaint);
       /////////
 
       Paint paint = Paint();
@@ -173,18 +180,23 @@ class LayoutDesignPainter extends CustomPainter {
       double x = shape.position.dx + shape.vertices[0].dx;
       double y = shape.position.dy + shape.vertices[0].dy;
       Path path = Path();
-      path.moveTo(x, y);
-      for (int i = 1; i < shape.vertices.length; i++) {
-        x = shape.position.dx + shape.vertices[i].dx;
-        y = shape.position.dy + shape.vertices[i].dy;
-        path.lineTo(x, y);
+
+      if (shape is ShapeEllipsis || shape.type == "eclipse") {
+        Rect eclipse = Rect.fromPoints(Offset(x,y), Offset(x,y) + shape.vertices[shape.vertices.length-1]);
+        canvas.drawOval(eclipse, paint);
+
+      } else {
+        path.moveTo(x, y);
+        for (int i = 1; i < shape.vertices.length; i++) {
+          x = shape.position.dx + shape.vertices[i].dx;
+          y = shape.position.dy + shape.vertices[i].dy;
+          path.lineTo(x, y);
+        }
+        if (shape.closed) {
+          path.close();
+        }
+        canvas.drawPath(path, paint);
       }
-      /////////
-      if (shape.closed) {
-        path.close();
-      }
-      /////////
-      canvas.drawPath(path, paint);
     }
   }
 

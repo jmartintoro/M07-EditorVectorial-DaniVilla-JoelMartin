@@ -4,16 +4,22 @@ import 'package:flutter_cupertino_desktop_kit/cdk_theme.dart';
 
 abstract class Shape { //////////
   Offset position = const Offset(0, 0);
+  String type = "shape";
   Size scale = const Size(1, 1);
   Color strokeColor = CDKTheme.black;
   Color fillColor = Colors.transparent;
   bool closed = false;
   double strokeWidth= 1;
   Offset initialPosition = Offset(0, 0);
+  Offset endPosition = Offset(0, 0);
   double rotation = 0;
   List<Offset> vertices = [];
 
   Shape();
+
+  void setType(String t) {
+    this.type = t;
+  }
 
   void setFillColor(Color c) {
     fillColor = c;
@@ -106,7 +112,7 @@ abstract class Shape { //////////
 }
 ////////////////////
 class ShapeDrawing extends Shape {
-
+  
 }
 
 class ShapeLine extends Shape {
@@ -122,6 +128,18 @@ class ShapeRectangle extends Shape {
 }
 
 class ShapeEllipsis extends Shape {
+  
+  void setAttributesFromOtherShape(Shape oldShape){
+    this.strokeColor = oldShape.strokeColor;
+    this.endPosition = oldShape.endPosition;
+    this.scale = oldShape.scale;
+    this.position = oldShape.position;
+    this.initialPosition = oldShape.initialPosition;
+    this.fillColor = oldShape.fillColor;
+    this.strokeWidth = oldShape.strokeWidth;
+    this.vertices = oldShape.vertices;
+    this.rotation = oldShape.rotation;
+  }
   
 }
 ////////////////

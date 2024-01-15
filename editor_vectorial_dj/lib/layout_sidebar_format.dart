@@ -12,13 +12,13 @@ class LayoutSidebarFormat extends StatefulWidget {
 
 class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
   late Widget _preloadedColorPicker;
-  late Widget _preloadedColorPicker2;  ////////////////////////
+  late Widget _preloadedColorPicker2;  
   final GlobalKey<CDKDialogPopoverState> _anchorColorButton = GlobalKey();
-  final GlobalKey<CDKDialogPopoverState> _anchorColorButton2 = GlobalKey(); //////////////////////
+  final GlobalKey<CDKDialogPopoverState> _anchorColorButton2 = GlobalKey();
   final ValueNotifier<Color> _valueColorNotifier =
       ValueNotifier(CDKTheme.black);
   final ValueNotifier<Color> _valueColorNotifier2 =
-      ValueNotifier(CDKTheme.black);  //////////////////////////////////////////
+      ValueNotifier(CDKTheme.black);  
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
     AppData appData = Provider.of<AppData>(context, listen: false);
 
     _preloadedColorPicker = _buildPreloadedColorPicker(appData);
-    _preloadedColorPicker2 = _buildPreloadedColorPicker2(appData); ///////////////////
+    _preloadedColorPicker2 = _buildPreloadedColorPicker2(appData);
   }
 
   @override
@@ -191,7 +191,6 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                     ),
                   ],
                 ),
-                ////////////////////////////////////////////////
                 const SizedBox(
                   height: 8,
                 ),
@@ -236,7 +235,6 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                     )
                   ],
                 ),
-                //////////////////////////////////////
                 const SizedBox(height: 16),
               ]);
         },
@@ -288,7 +286,6 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
     );
   }
 
-  /////////////////////
   void _showPopoverColor2(BuildContext context, GlobalKey anchorKey) {
     final GlobalKey<CDKDialogPopoverArrowedState> key = GlobalKey();
     if (anchorKey.currentContext == null || !mounted) {
@@ -333,5 +330,4 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
       ),
     );
   }
-  ////////////////////
 }

@@ -19,11 +19,11 @@ class AppData with ChangeNotifier {
   double zoom = 95;
   Size docSize = const Size(500, 400);
   String toolSelected = "shape_drawing";
-  Shape newShape = ShapeDrawing(); ///////////
+  Shape newShape = ShapeDrawing(); 
   List<Shape> shapesList = [];
   int shapeSelected = -1;
   int shapeSelectedPrevious = -1;
-  bool firstMultilineClick = true; //////////
+  bool firstMultilineClick = true; 
 
   Color backgroundColor = Colors.transparent;
   Color oldBackColor = Colors.transparent; 
@@ -88,7 +88,6 @@ class AppData with ChangeNotifier {
     actionManager.register(ActionSetDocHeight(this, previousHeight, value));
   }
 
-  ///////////////
   void setBackgroundColor(Color color) {
     actionManager
         .register(ActionChangeBackgroundColor(this, oldBackColor, color));
@@ -96,7 +95,6 @@ class AppData with ChangeNotifier {
     oldBackColor = color;
     notifyListeners();
   }
-  ////////////
 
   void setToolSelected(String name) {
     toolSelected = name;
@@ -135,7 +133,6 @@ class AppData with ChangeNotifier {
     notifyListeners();
   }
 
-  //////////////
   void addNewSquare(Offset position) {
     newShape.setPosition(position);
     newShape.setInitialPosition(newShape.position);
@@ -149,8 +146,6 @@ class AppData with ChangeNotifier {
     newShape.addRelativePoint(Offset(newShape.initialPosition.dx, newShape.initialPosition.dy));
     notifyListeners();
   }
-  
-  //////////////
 
   Future<void> addNewShapeFromClipboard() async {
     try {
@@ -175,7 +170,6 @@ class AppData with ChangeNotifier {
     notifyListeners();
   }
 
-  /////////
   void moveLastVertice(Offset point) {
     if (newShape.getVertices().length >= 2) {
       newShape.getVertices().removeLast();
@@ -193,7 +187,6 @@ class AppData with ChangeNotifier {
     }
     addSquare(point);
   }
-  /////////
   
   void addNewShapeToShapesList() {
     // Si no hi ha almenys 2 punts, no es podrà dibuixar res
@@ -201,7 +194,19 @@ class AppData with ChangeNotifier {
       newShape.setStrokeColor(strokeColor);
       double strokeWidthConfig = newShape.strokeWidth;
       actionManager.register(ActionAddNewShape(this, newShape));
-      newShape = ShapeDrawing(); ///////
+      newShape = ShapeDrawing(); 
+      newShape.setStrokeWidth(strokeWidthConfig);
+    }
+  }
+
+  void addNewEllipseToShapeList() {
+    if (newShape.vertices.length >= 2) {
+      ShapeEllipsis shape = ShapeEllipsis();
+      shape.setAttributesFromOtherShape(newShape);
+      shape.setStrokeColor(strokeColor);
+      double strokeWidthConfig = shape.strokeWidth;
+      actionManager.register(ActionAddNewShape(this, shape));
+      newShape = ShapeDrawing(); 
       newShape.setStrokeWidth(strokeWidthConfig);
     }
   }
