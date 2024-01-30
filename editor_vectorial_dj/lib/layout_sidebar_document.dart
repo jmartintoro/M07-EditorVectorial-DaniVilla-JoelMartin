@@ -117,10 +117,26 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                     }
                   },
                   child: appData.fileName == "" ? Text('Save as') : Text('Save')
-                )
+                ),
 
 
                 /////////////////////////
+                //File Actions
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      width: labelsWidth,
+                      child: CDKButton(
+                        child: Text('Load File'),
+                        onPressed: () {
+                          appData.loadFile();
+                        },
+                      ),
+                    )
+                  ],
+                )
               ]);
         },
       ),
