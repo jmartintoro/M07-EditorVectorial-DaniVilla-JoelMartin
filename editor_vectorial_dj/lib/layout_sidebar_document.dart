@@ -103,6 +103,22 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                   ],
                 ),
                 const SizedBox(height: 16),
+                //File Actions
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      width: labelsWidth,
+                      child: CDKButton(
+                        child: Text('Load File'),
+                        onPressed: () {
+                          appData.loadFile();
+                        },
+                      ),
+                    )
+                  ],
+                )
               ]);
         },
       ),

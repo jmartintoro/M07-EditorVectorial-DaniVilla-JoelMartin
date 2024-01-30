@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk_theme.dart';
@@ -19,14 +21,14 @@ class AppData with ChangeNotifier {
   double zoom = 95;
   Size docSize = const Size(500, 400);
   String toolSelected = "shape_drawing";
-  Shape newShape = ShapeDrawing(); 
+  Shape newShape = ShapeDrawing();
   List<Shape> shapesList = [];
   int shapeSelected = -1;
   int shapeSelectedPrevious = -1;
-  bool firstMultilineClick = true; 
+  bool firstMultilineClick = true;
 
   Color backgroundColor = Colors.transparent;
-  Color oldBackColor = Colors.transparent; 
+  Color oldBackColor = Colors.transparent;
   Color shapeFillColor = Colors.transparent;
   Color strokeColor = CDKTheme.black;
   List<double> recuadrePositions = []; //[x1,x2,y1,y2]
@@ -128,7 +130,7 @@ class AppData with ChangeNotifier {
     newShape.setPosition(position);
     newShape.addPoint(const Offset(0, 0));
     newShape.setInitialPosition(newShape.position);
-    newShape.setClosed(closeShape);       
+    newShape.setClosed(closeShape);
     newShape.setFillColor(shapeFillColor);
     notifyListeners();
   }
@@ -143,7 +145,8 @@ class AppData with ChangeNotifier {
     newShape.addRelativePoint(Offset(position.dx, newShape.initialPosition.dy));
     newShape.addRelativePoint(Offset(position.dx, position.dy));
     newShape.addRelativePoint(Offset(newShape.initialPosition.dx, position.dy));
-    newShape.addRelativePoint(Offset(newShape.initialPosition.dx, newShape.initialPosition.dy));
+    newShape.addRelativePoint(
+        Offset(newShape.initialPosition.dx, newShape.initialPosition.dy));
     notifyListeners();
   }
 
@@ -187,14 +190,14 @@ class AppData with ChangeNotifier {
     }
     addSquare(point);
   }
-  
+
   void addNewShapeToShapesList() {
     // Si no hi ha almenys 2 punts, no es podrà dibuixar res
     if (newShape.vertices.length >= 2) {
       newShape.setStrokeColor(strokeColor);
       double strokeWidthConfig = newShape.strokeWidth;
       actionManager.register(ActionAddNewShape(this, newShape));
-      newShape = ShapeDrawing(); 
+      newShape = ShapeDrawing();
       newShape.setStrokeWidth(strokeWidthConfig);
     }
   }
@@ -206,7 +209,7 @@ class AppData with ChangeNotifier {
       shape.setStrokeColor(strokeColor);
       double strokeWidthConfig = shape.strokeWidth;
       actionManager.register(ActionAddNewShape(this, shape));
-      newShape = ShapeDrawing(); 
+      newShape = ShapeDrawing();
       newShape.setStrokeWidth(strokeWidthConfig);
     }
   }
@@ -264,5 +267,39 @@ class AppData with ChangeNotifier {
     recuadrePositions.add(y1);
     recuadrePositions.add(y2);
     notifyListeners();
+  }
+
+  Future<void> loadFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        if (!file.existsSync()) {
+          print("El archivo no existe.");
+          return;
+        }
+
+        String resultString = await file.readAsString();
+        try {
+          Map<String, dynamic> jsonData = jsonDecode(resultString);
+
+          if (jsonData.containsKey('drawings')) {
+            List<dynamic> drawings = jsonData['drawings'];
+            for (var item in drawings) {
+              Shape newShape = Shape.fromMap(item);
+              shapesList.add(newShape);
+              notifyListeners();
+            }
+          } else {
+            print("El archivo no contiene la clave 'drawings'.");
+          }
+        } catch (e) {
+          print("Error al decodificar el JSON: $e");
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
