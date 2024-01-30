@@ -306,7 +306,6 @@ class AppData with ChangeNotifier {
     }
   }
 
-  //////////////
   Future<void> saveFile() async {
     if (directoryPath == "") {
       await getDirectoryPath();
@@ -339,5 +338,4 @@ class AppData with ChangeNotifier {
       print(directoryPath);
       notifyListeners();
   }
-  //////////////
 }

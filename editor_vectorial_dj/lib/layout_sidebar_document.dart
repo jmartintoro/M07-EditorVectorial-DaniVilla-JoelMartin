@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'app_data.dart';
 
@@ -104,24 +105,8 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                /////////////////////////
                 Text("File actions:", style: fontBold),
                 const SizedBox(height: 8),
-                CDKButton(
-                  key: _anchorArrowedButton,
-                  onPressed: () {
-                    if (appData.fileName == "") {
-                      _showPopoverArrowed(context, _anchorArrowedButton, appData);
-                    } else {
-                      appData.saveFile();
-                    }
-                  },
-                  child: appData.fileName == "" ? Text('Save as') : Text('Save')
-                ),
-
-
-                /////////////////////////
-                //File Actions
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -135,6 +120,43 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                         },
                       ),
                     )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      width: labelsWidth,
+                      child: CDKButton(
+                        key: _anchorArrowedButton,
+                        onPressed: () {
+                          if (appData.fileName == "") {
+                            _showPopoverArrowed(context, _anchorArrowedButton, appData);
+                          } else {
+                            appData.saveFile();
+                          }
+                        },
+                        child: appData.fileName == "" ? Text('Save as') : Text('Save')
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      width: labelsWidth,
+                      child: CDKButton(
+                        onPressed: () {
+                          print("export svg");
+                        },
+                        child: Text('Export as SVG')
+                      ),
+                    ),
                   ],
                 )
               ]);
