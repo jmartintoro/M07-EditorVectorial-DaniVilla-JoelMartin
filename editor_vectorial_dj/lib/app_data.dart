@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io'; ////////////
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_cupertino_desktop_kit/cdk_theme.dart';
 import 'app_click_selector.dart';
 import 'app_data_actions.dart';
 import 'util_shape.dart';
+import 'package:file_picker/file_picker.dart'; ////////////////
 
 class AppData with ChangeNotifier {
   // Access appData globaly with:
@@ -24,6 +26,8 @@ class AppData with ChangeNotifier {
   int shapeSelected = -1;
   int shapeSelectedPrevious = -1;
   bool firstMultilineClick = true; 
+  String fileName = ""; ///////////////
+  String directoryPath = ""; /////////////
 
   Color backgroundColor = Colors.transparent;
   Color oldBackColor = Colors.transparent; 
@@ -265,4 +269,39 @@ class AppData with ChangeNotifier {
     recuadrePositions.add(y2);
     notifyListeners();
   }
+
+  //////////////
+  Future<void> saveFile() async {
+    if (directoryPath == "") {
+      await getDirectoryPath();
+    }
+    List<dynamic> JSONShapesList = [];
+    for (int shape = 0; shape < shapesList.length; shape++) {
+      JSONShapesList.add(jsonEncode(shapesList[shape].toMap()));
+    }
+
+    File file = File("$directoryPath/$fileName.json");
+    print(file.path);
+    IOSink writer;
+
+  try {
+    writer = file.openWrite();
+    
+    writer.write('{"drawings": $JSONShapesList}');
+
+    print('DONE!');
+  } catch (e) {
+    print('Error al escribir: $e');
+  } 
+  }
+
+  Future<void> getDirectoryPath() async {
+      String? path = await FilePicker.platform.getDirectoryPath();
+      if (path != null) {
+          directoryPath = path;
+      }
+      print(directoryPath);
+      notifyListeners();
+  }
+  //////////////
 }

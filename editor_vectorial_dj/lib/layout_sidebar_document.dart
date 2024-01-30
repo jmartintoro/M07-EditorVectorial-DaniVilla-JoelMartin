@@ -15,6 +15,7 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
   //Para backgroundColor
   late Widget _preloadedColorPicker;
   final GlobalKey<CDKDialogPopoverState> _anchorColorButton = GlobalKey();
+  final GlobalKey<CDKDialogPopoverArrowedState> _anchorArrowedButton = GlobalKey(); /////////
   final ValueNotifier<Color> _valueColorNotifier =
       ValueNotifier(CDKTheme.black);
   Color backColor = Colors.black;
@@ -103,6 +104,23 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                   ],
                 ),
                 const SizedBox(height: 16),
+                /////////////////////////
+                Text("File actions:", style: fontBold),
+                const SizedBox(height: 8),
+                CDKButton(
+                  key: _anchorArrowedButton,
+                  onPressed: () {
+                    if (appData.fileName == "") {
+                      _showPopoverArrowed(context, _anchorArrowedButton, appData);
+                    } else {
+                      appData.saveFile();
+                    }
+                  },
+                  child: appData.fileName == "" ? Text('Save as') : Text('Save')
+                )
+
+
+                /////////////////////////
               ]);
         },
       ),
@@ -143,11 +161,57 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
         isAnimated: true,
         isTranslucent: true,
         child: _preloadedColorPicker,
-        ///////////////
         onHide: () {
           data.setBackgroundColor(backColor);
         }
-        ///////////
         );
+  }
+
+  _showPopoverArrowed(BuildContext context, GlobalKey anchorKey, AppData data) {
+    final GlobalKey<CDKDialogPopoverArrowedState> key = GlobalKey();
+    if (anchorKey.currentContext == null) {
+      // ignore: avoid_print
+      print("Error: anchorKey not assigned to a widget");
+      return;
+    }
+    CDKDialogsManager.showPopoverArrowed(
+      key: key,
+      context: context,
+      anchorKey: anchorKey,
+      isAnimated: true,
+      isTranslucent: false,
+      onHide: () {
+        // ignore: avoid_print
+        print("hide arrowed $key");
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("File name:", style: TextStyle(fontSize: 12)),
+            const SizedBox(height: 10),
+            SizedBox(
+                width: 100,
+                child: CDKFieldText(
+                  placeholder: 'File Name',
+                  isRounded: false,
+                  onSubmitted: (value) {
+                    if (value == "") {
+                      print("The FileName can't be empty");
+                    } else {
+                      data.fileName = value;
+                      print("FileName submitted: $value");
+                      data.saveFile();
+                      key.currentState?.hide();
+                    }
+                  },
+                  focusNode: FocusNode(),
+                )),
+            const SizedBox(height: 10)
+          ],
+        ),
+      ),
+    );
   }
 }
