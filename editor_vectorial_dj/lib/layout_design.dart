@@ -246,7 +246,7 @@ class LayoutDesignState extends State<LayoutDesign> {
                           ////////////////
                           else if (appData.toolSelected == "pointer_shapes" && appData.shapeSelected != -1) {
                             Offset newShapePosition = docPosition - dragStartOffset;
-                            appData.changeShapePosition(newShapePosition); 
+                            appData.setShapePosition(newShapePosition); 
                             appData.getRecuadreForm(appData.shapeSelected);
                             appData.forceNotifyListeners();
                           }
@@ -301,7 +301,7 @@ class LayoutDesignState extends State<LayoutDesign> {
                           Offset docPosition = _getDocPosition(event.localPosition, appData.zoom, constraints, docSize, _scrollCenter);
                           Offset newShapePosition = docPosition - dragStartOffset;
                           if (dragStartPosition != newShapePosition) {
-                            appData.shapesList[appData.shapeSelected].setPosition(newShapePosition);
+                            appData.setShapePosition(newShapePosition);
                             appData.getRecuadreForm(appData.shapeSelected);
                             appData.forceNotifyListeners();
                           }

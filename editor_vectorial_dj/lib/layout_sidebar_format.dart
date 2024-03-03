@@ -81,12 +81,8 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                                   value,
                                   appData.shapesList[appData.shapeSelected]
                                       .position.dy));
+                          appData.setShapePosition(Offset(value, appData.shapesList[appData.shapeSelected].position.dy));
                           appData.getRecuadreForm(appData.shapeSelected);
-                          appData.shapesList[appData.shapeSelected].position =
-                              Offset(
-                                  value,
-                                  appData.shapesList[appData.shapeSelected]
-                                      .position.dy);
                           appData.notifyListeners();
                         },
                       ),
@@ -125,12 +121,8 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                                   appData.shapesList[appData.shapeSelected]
                                       .position.dx,
                                   value));
+                          appData.setShapePosition(Offset(appData.shapesList[appData.shapeSelected].position.dx, value));
                           appData.getRecuadreForm(appData.shapeSelected);
-                          appData.shapesList[appData.shapeSelected].position =
-                              Offset(
-                                  appData.shapesList[appData.shapeSelected]
-                                      .position.dx,
-                                  value);
                           appData.notifyListeners();
                         },
                       ),
@@ -161,10 +153,7 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
                         onValueChanged: (value) {
                           setState(() {
                             if (appData.shapeSelected > -1) {
-                              appData.shapesList[appData.shapeSelected]
-                                  .strokeWidth = value;
-                              appData.newShape.strokeWidth = value;
-                              appData.getRecuadreForm(appData.shapeSelected);
+                              appData.setShapeStrokeWidth(value);
                               appData.forceNotifyListeners();
                             } else {
                               appData.setNewShapeStrokeWidth(value);
@@ -270,9 +259,7 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
             onChanged: (color) {
               setState(() {
                 if (data.shapeSelected > -1) {
-                  data.shapesList[data.shapeSelected].strokeColor = color;
-                  data.newShape.strokeColor = color;
-                  data.strokeColor = color;
+                  data.setShapeStrokeColor(color);
                   data.forceNotifyListeners();
                 } else {
                   data.strokeColor = color;
@@ -314,10 +301,7 @@ class LayoutSidebarFormatState extends State<LayoutSidebarFormat> {
             onChanged: (color) {
               setState(() {
                 if (data.shapeSelected > -1) {
-                  data.shapesList[data.shapeSelected].fillColor = color;
-                  data.newShape.fillColor = color;
-                  data.shapeFillColor = color;
-                  data.forceNotifyListeners();
+                  data.setShapeFillColor(color);
                 } else {
                   data.shapeFillColor = color;
                   _valueColorNotifier2.value = color;

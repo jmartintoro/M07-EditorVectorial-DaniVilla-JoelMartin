@@ -127,19 +127,18 @@ class ActionChangeBackgroundColor implements Action {
 class ActionDeleteShape implements Action {
   final AppData appData;
   final int id;
-  final List<Shape> shapeList;
+  final Shape shape;
 
-  ActionDeleteShape(this.appData, this.id, this.shapeList);
+  ActionDeleteShape(this.appData, this.id, this.shape);
 
   @override
   void undo() {
-    appData.shapesList.clear();
-    appData.shapesList = shapeList;
+    appData.shapesList.add(shape);
   }
 
   @override
   void redo() {
-    appData.deleteShapeFromList(id);
+    appData.shapesList.remove(shape);
   }
 }
 
@@ -159,6 +158,90 @@ class ActionChangeClosed implements Action {
   @override
   void redo() {
     appData.shapesList[id].setClosed(newValue);
+    appData.notifyListeners();
+  }
+}
+
+class ActionChangePosition implements Action {
+  final AppData appData;
+  final Offset oldPosition;
+  final Offset newPosition;
+  final int id;
+
+  ActionChangePosition(this.appData, this.id, this.oldPosition, this.newPosition);
+
+  @override
+  void undo() {
+    appData.shapesList[id].setPosition(oldPosition);
+    appData.notifyListeners();
+  }
+
+  @override
+  void redo() {
+    appData.shapesList[id].setPosition(newPosition);
+    appData.notifyListeners();
+  }
+}
+
+class ActionChangeStrokeWidth implements Action {
+  final AppData appData;
+  final double oldValue;
+  final double newValue;
+  final int id;
+
+  ActionChangeStrokeWidth(this.appData, this.id, this.oldValue, this.newValue);
+
+  @override
+  void undo() {
+    appData.shapesList[id].setStrokeWidth(oldValue);
+    appData.notifyListeners();
+  }
+
+  @override
+  void redo() {
+    appData.shapesList[id].setStrokeWidth(newValue);
+    appData.notifyListeners();
+  }
+}
+
+class ActionChangeStrokeColor implements Action {
+  final AppData appData;
+  final Color oldValue;
+  final Color newValue;
+  final int id;
+
+  ActionChangeStrokeColor(this.appData, this.id, this.oldValue, this.newValue);
+
+  @override
+  void undo() {
+    appData.shapesList[id].setStrokeColor(oldValue);
+    appData.notifyListeners();
+  }
+
+  @override
+  void redo() {
+    appData.shapesList[id].setStrokeColor(newValue);
+    appData.notifyListeners();
+  }
+}
+
+class ActionChangeFillColor implements Action {
+  final AppData appData;
+  final Color oldValue;
+  final Color newValue;
+  final int id;
+
+  ActionChangeFillColor(this.appData, this.id, this.oldValue, this.newValue);
+
+  @override
+  void undo() {
+    appData.shapesList[id].setFillColor(oldValue);
+    appData.notifyListeners();
+  }
+
+  @override
+  void redo() {
+    appData.shapesList[id].setFillColor(newValue);
     appData.notifyListeners();
   }
 }

@@ -116,9 +116,26 @@ class AppData with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeShapePosition(Offset newShapePosition) {
-    Shape oldShape = shapesList[shapeSelected];
+  void setShapePosition(Offset newShapePosition) {
+    actionManager.register(ActionChangePosition(this, shapeSelected, shapesList[shapeSelected].position, newShapePosition));
     shapesList[shapeSelected].setPosition(newShapePosition);
+    notifyListeners();
+  }
+
+  void setShapeStrokeColor(Color newColor) {
+    actionManager.register(ActionChangeStrokeColor(this, shapeSelected, shapesList[shapeSelected].strokeColor, newColor));
+    shapesList[shapeSelected].strokeColor = newColor; 
+    newShape.strokeColor = newColor;
+    strokeColor = newColor;
+    notifyListeners();
+  }
+
+  void setShapeFillColor(Color newColor) {
+    actionManager.register(ActionChangeFillColor(this, shapeSelected, shapesList[shapeSelected].fillColor, newColor));
+    shapesList[shapeSelected].fillColor = newColor;
+    newShape.fillColor = newColor;
+    shapeFillColor = newColor;
+    forceNotifyListeners();
   }
 
   Future<void> selectShapeAtPosition(Offset docPosition, Offset localPosition,
@@ -217,14 +234,22 @@ class AppData with ChangeNotifier {
     }
   }
 
+  void setShapeStrokeWidth(double newValue) {
+    actionManager.register(ActionChangeStrokeWidth(this, shapeSelected, shapesList[shapeSelected].strokeWidth, newValue));
+    shapesList[shapeSelected].strokeWidth = newValue;
+    newShape.strokeWidth = newValue;
+    getRecuadreForm(shapeSelected);
+    notifyListeners();
+  }
+
   void setNewShapeStrokeWidth(double value) {
     newShape.setStrokeWidth(value);
     notifyListeners();
   }
 
   void deleteShapeFromList(int shapeIndex) {
-    shapesList.remove(shapesList[shapeIndex]);
-    //actionManager.register(ActionDeleteShape(this, shapeIndex, shapesList));
+    //shapesList.remove(shapesList[shapeIndex]);
+    actionManager.register(ActionDeleteShape(this, shapeIndex, shapesList[shapeSelected]));
     setShapeSelected(-1);
     notifyListeners();
   }
