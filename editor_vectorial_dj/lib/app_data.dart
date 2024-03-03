@@ -1,14 +1,16 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk_theme.dart';
 import 'app_click_selector.dart';
 import 'app_data_actions.dart';
 import 'util_shape.dart';
-import 'package:file_picker/file_picker.dart'; ////////////////
+import 'package:file_picker/file_picker.dart'; 
+import 'dart:convert';
+import 'package:xml/xml.dart';
 
 class AppData with ChangeNotifier {
   // Access appData globaly with:
@@ -331,7 +333,7 @@ class AppData with ChangeNotifier {
     }
   }
 
-  Future<void> saveFile() async {
+  Future<void> saveFileToJSON() async {
     if (directoryPath == "") {
       await getDirectoryPath();
     }
@@ -340,6 +342,8 @@ class AppData with ChangeNotifier {
       JSONShapesList.add(jsonEncode(shapesList[shape].toMap()));
     }
 
+    String jsonString = '{"drawings": $JSONShapesList}';
+
     File file = File("$directoryPath/$fileName.json");
     print(file.path);
     IOSink writer;
@@ -347,7 +351,7 @@ class AppData with ChangeNotifier {
   try {
     writer = file.openWrite();
     
-    writer.write('{"drawings": $JSONShapesList}');
+    writer.write(jsonString);
 
     print('DONE!');
   } catch (e) {
@@ -363,4 +367,58 @@ class AppData with ChangeNotifier {
       print(directoryPath);
       notifyListeners();
   }
+
+  saveToSVG() async {
+    
+    if (directoryPath == "") {
+      await getDirectoryPath();
+    }
+    List<dynamic> JSONShapesList = [];
+    for (int shape = 0; shape < shapesList.length; shape++) {
+      JSONShapesList.add(jsonEncode(shapesList[shape].toMap()));
+    }
+
+    String jsonString = '{"drawings": $JSONShapesList}';
+
+
+  Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+  }
+
+  createSvgFileWithShapes(List<Shape> shapes) {
+    final svgDocument = XmlDocument([
+      XmlProcessing('xml', 'version="1.0" encoding="UTF-8"'),
+      XmlElement(XmlName('svg'), [
+        XmlAttribute(XmlName('width'), docSize.width.toString()), // Ajusta el ancho del SVG
+        XmlAttribute(XmlName('height'), docSize.height.toString()), // Ajusta la altura del SVG
+      ], [
+          for (var shape in shapes)
+            if (shape is ShapeEllipsis) 
+              XmlElement(XmlName('ellipse'), [
+              XmlAttribute(XmlName('cx'), '${shape.vertices[0].dx + shape.position.dx}'), // Posicion de inicio (x)
+              XmlAttribute(XmlName('cy'), '${shape.vertices[1].dy + shape.position.dy}'), // Posicion de inicio (y)
+              XmlAttribute(XmlName('rx'), '${shape.vertices[1].dx/2-shape.vertices[0].dx/2}'), // Radio de x
+              XmlAttribute(XmlName('ry'), '${shape.vertices[1].dy/2-shape.vertices[0].dy/2}'), // Radio de y
+              XmlAttribute(XmlName('stroke'), '#${shape.strokeColor.value.toRadixString(16).substring(2)}'),// Color de la línea 
+              XmlAttribute(XmlName('stroke-width'), shape.strokeWidth.toString()), // Grosor de la línea
+              XmlAttribute(XmlName('stroke-opacity'), (int.parse('0x${shape.strokeColor.value.toRadixString(16).substring(0,2)}')/255).toString() /*(hex/255).toString()*/), // Opacidad de la línea
+              XmlAttribute(XmlName('fill'), shape.fillColor == Colors.transparent ? 'none' : '#${shape.fillColor.value.toRadixString(16).substring(2)}') // Color de relleno (si tiene)
+            ])
+            else 
+              XmlElement(shape.closed ? XmlName("polygon") : XmlName("polyline"), [
+                XmlAttribute(XmlName('points'), shape.vertices.map((e) => '${e.dx + shape.position.dx},${e.dy + shape.position.dy}').join(' ')), // vertices
+                XmlAttribute(XmlName('stroke'), '#${shape.strokeColor.value.toRadixString(16).substring(2)}'), // Color de la línea 
+                XmlAttribute(XmlName('stroke-width'), shape.strokeWidth.toString()), // Grosor de la línea
+                XmlAttribute(XmlName('stroke-opacity'), (int.parse('0x${shape.strokeColor.value.toRadixString(16).substring(0,2)}')/255).toString()), // Opacidad de la línea
+                XmlAttribute(XmlName('fill'), shape.fillColor == Colors.transparent ? 'none' : '#${shape.fillColor.value.toRadixString(16).substring(2)}') // Color de relleno (si tiene)
+            ]),
+      ]),
+    ]);
+
+    final svgString = svgDocument.toXmlString(pretty: true);
+
+    // Guarda el contenido SVG en un archivo
+    final file = File('mi_archivo.svg');
+    file.writeAsStringSync(svgString);
+  }
+
 }

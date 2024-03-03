@@ -135,7 +135,7 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                           if (appData.fileName == "") {
                             _showPopoverArrowed(context, _anchorArrowedButton, appData);
                           } else {
-                            appData.saveFile();
+                            appData.saveFileToJSON();
                           }
                         },
                         child: appData.fileName == "" ? Text('Save as') : Text('Save')
@@ -153,6 +153,7 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                       child: CDKButton(
                         onPressed: () {
                           print("export svg");
+                          appData.createSvgFileWithShapes(appData.shapesList);
                         },
                         child: Text('Export as SVG')
                       ),
@@ -240,7 +241,7 @@ class LayoutSidebarDocumentState extends State<LayoutSidebarDocument> {
                     } else {
                       data.fileName = value;
                       print("FileName submitted: $value");
-                      data.saveFile();
+                      data.saveFileToJSON();
                       key.currentState?.hide();
                     }
                   },
