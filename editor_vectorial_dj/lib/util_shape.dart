@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_desktop_kit/cdk_theme.dart';
 
-abstract class Shape { //////////
+abstract class Shape { 
   Offset position = const Offset(0, 0);
   String type = "shape";
   Size scale = const Size(1, 1);
