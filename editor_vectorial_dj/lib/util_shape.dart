@@ -85,6 +85,8 @@ abstract class Shape { //////////
         'vertices': vertices.map((v) => {'dx': v.dx, 'dy': v.dy}).toList(),
         'strokeWidth': strokeWidth,
         'strokeColor': strokeColor.value,
+        'fillColor': fillColor.value,
+        'closed': closed,
       }
     };
   }
@@ -100,7 +102,9 @@ abstract class Shape { //////////
       ..setPosition(
           Offset(objectMap['position']['dx'], objectMap['position']['dy']))
       ..setStrokeWidth(objectMap['strokeWidth'])
-      ..setStrokeColor(Color(objectMap['strokeColor']));
+      ..setStrokeColor(Color(objectMap['strokeColor']))
+      ..setFillColor(Color(objectMap['fillColor']))
+      ..setClosed(objectMap['closed']);
 
     if (objectMap['vertices'] != null) {
       var verticesList = objectMap['vertices'] as List;

@@ -78,7 +78,7 @@ void main() async {
           }
         }
 
-        //Shortcuts per cambiar entre eines (P,D,G)
+/*         //Shortcuts per cambiar entre eines (P,D,G)
         if (isPpressed) {
           appData.setToolSelected("pointer_shapes");
           return KeyEventResult.handled;
@@ -88,7 +88,7 @@ void main() async {
         } else if (isGpressed) {
           appData.setToolSelected("view_grab");
           return KeyEventResult.handled;
-        }
+        } */
 
         if (event.logicalKey == LogicalKeyboardKey.altLeft) {
           appData.isAltOptionKeyPressed = true;
